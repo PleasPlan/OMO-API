@@ -94,7 +94,7 @@ public class SecurityConfiguration {
 //        configuration.addAllowedOriginPattern("*"); // 모든 origin 패턴을 허용
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","https://accounts.google.com",
                 "https://kauth.kakao.com", "https://nid.naver.com", "https://www.oneulmohae.co.kr")); // http://localhost:5173, oauth 요청에 대해 http 통신 허용
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "DELETE", "OPTIONS", "HEAD")); // 허용하는 http 메서드
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "DELETE", "OPTIONS", "HEAD", "PUT")); // 허용하는 http 메서드
         configuration.setAllowCredentials(true); // 허용된 origin의 자격증명 허용
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Refresh", "x", "y", "Content-Type", "placeId", "memberId", "LR")); // 요청 시 허용 헤더 추가 todo 필요한 헤더만 추가하도록 수정 필요
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh", "x", "y", "Content-Type", "placeId", "memberId", "LR")); // 응답 헤더
