@@ -194,8 +194,8 @@ public class MyPageService {
                         objectNode.put("recommend", 0);
                     }
 
-                    objectNode.put("mine", mine);
-                    objectNode.put("recommend", recommend);
+                    objectNode.put("myMine", mine);
+                    objectNode.put("myRecommend", recommend);
 
                     JsonNode changedNode = objectNode;
                     placesNode.set(index,changedNode);
