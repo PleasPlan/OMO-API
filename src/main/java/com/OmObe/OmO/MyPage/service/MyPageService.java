@@ -186,7 +186,13 @@ public class MyPageService {
                             }
                         }
                     }
-
+                    if(place != null){
+                        objectNode.put("mine", place.getPlaceLikeList().size());
+                        objectNode.put("recommend", place.getPlaceRecommendList().size());
+                    } else {
+                        objectNode.put("mine",0);
+                        objectNode.put("recommend", 0);
+                    }
 
                     objectNode.put("mine", mine);
                     objectNode.put("recommend", recommend);
