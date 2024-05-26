@@ -9,6 +9,7 @@ import com.OmObe.OmO.Place.repository.PlaceRecommendRepository;
 import com.OmObe.OmO.Place.repository.PlaceRepository;
 import com.OmObe.OmO.Review.entity.Review;
 import com.OmObe.OmO.Review.repository.ReviewRepository;
+import com.OmObe.OmO.auth.jwt.TokenDecryption;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.service.MemberService;
 import com.OmObe.OmO.util.PairJ;
@@ -47,22 +48,25 @@ public class PlaceService {
     private final PlaceRecommendRepository placeRecommendRepository;
     private final CommentService commentService;
     private final MemberService memberService;
+    private final TokenDecryption tokenDecryption;
 
     public PlaceService(PlaceRepository placeRepository,
                         ReviewRepository reviewRepository,
                         PlaceLikeRepository placeLikeRepository,
                         PlaceRecommendRepository placeRecommendRepository,
                         CommentService commentService,
-                        MemberService memberService) {
+                        MemberService memberService,
+                        TokenDecryption tokenDecryption) {
         this.placeRepository = placeRepository;
         this.reviewRepository = reviewRepository;
         this.placeLikeRepository = placeLikeRepository;
         this.placeRecommendRepository = placeRecommendRepository;
         this.commentService = commentService;
         this.memberService = memberService;
+        this.tokenDecryption = tokenDecryption;
     }
 
-    public String getPlaces(String category, PairJ<Double, Double> middle,int page) {
+    public String getPlaces(String category, PairJ<Double, Double> middle, int page, String token) throws JsonProcessingException {
         String keyword;
         try{
             keyword = URLEncoder.encode(category, "UTF-8");
@@ -81,7 +85,12 @@ public class PlaceService {
         requestHeader.put("Authorization", "KakaoAK "+key);
         String responseBody = get(webAddress, requestHeader);
 
-        responseBody = idTracker(responseBody);
+        Member member = null;
+        if(token != null){
+            member = tokenDecryption.getWriterInJWTToken(token);
+        }
+
+        responseBody = idTracker(responseBody,member);
 
         return responseBody;
     }
@@ -378,7 +387,7 @@ public class PlaceService {
         }
     }
 
-    private String idTracker(String jsonData) {
+    private String idTracker(String jsonData,Member member) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonData);
@@ -402,6 +411,34 @@ public class PlaceService {
                         objectNode.put("mine",0);
                         objectNode.put("recommend", 0);
                     }
+                    // 멤버 존재 시
+                    if(member != null){
+                        boolean mine = false;
+                        boolean recommend = false;
+                        if(place != null) {
+                            List<PlaceLike> placeLikes = place.getPlaceLikeList();
+                            List<PlaceRecommend> placeRecommends = place.getPlaceRecommendList();
+                            if (!placeLikes.isEmpty()) {
+                                for (PlaceLike placeLike : placeLikes) {
+                                    if (placeLike.getMember() == member) {
+                                        mine = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!placeRecommends.isEmpty()) {
+                                for (PlaceRecommend placeRecommend : placeRecommends) {
+                                    if (placeRecommend.getMember() == member) {
+                                        recommend = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        objectNode.put("myMine", mine);
+                        objectNode.put("myRecommend", recommend);
+                    }
+
                     boolean imageChecker = true;
                     Collections.reverse(reviews.get());
                     for(Review review: reviews.get()){

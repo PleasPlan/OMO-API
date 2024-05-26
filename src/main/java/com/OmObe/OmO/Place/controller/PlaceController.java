@@ -8,6 +8,7 @@ import com.OmObe.OmO.util.PairJ;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.util.Pair;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Request;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +33,13 @@ public class PlaceController {
     public ResponseEntity getPlaces(@PathVariable("category") String category,
                                     @RequestHeader @Range(min = 0,max = 90) double y,
                                     @RequestHeader @Range(min = -180,max = 180) double x,
-                                    @RequestParam("page") int page){
+                                    @RequestParam("page") int page,
+                                    @RequestHeader("Authorization") @Nullable String token) throws JsonProcessingException {
         PairJ<Double, Double> middle = new PairJ<>();
         middle.setFirst(y);    // y (위도)
         middle.setSecond(x);   // x (경도)
 
-        String response = placeService.getPlaces(category, middle, page);
+        String response = placeService.getPlaces(category, middle, page, token);
         // json 응답 중 "is_end":false 가 되어있다면 다음 페이지가 존재하는 것이다.
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
