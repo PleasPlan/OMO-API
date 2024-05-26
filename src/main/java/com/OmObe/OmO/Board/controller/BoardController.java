@@ -197,8 +197,8 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/like")
-    public ResponseEntity likeBoard(@RequestHeader("boardId") long boardId,
+    @PutMapping("/like/{boardId}")
+    public ResponseEntity likeBoard(@PathVariable("boardId") @Positive long boardId,
                                     @RequestHeader("Authorization") String Token) throws JsonProcessingException {
         Member writer = tokenDecryption.getWriterInJWTToken(Token);
 
