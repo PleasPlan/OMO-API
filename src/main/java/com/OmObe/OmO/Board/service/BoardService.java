@@ -148,9 +148,9 @@ public class BoardService {
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
-        List<Liked> likedList = likedRepository.findByBoardAndMember(findBoard(boardId), member);
+        Optional<Liked> optionalLiked = likedRepository.findByBoardAndMember(findBoard(boardId), member);
         Liked liked = null;
-        if(likedList.size() == 0){
+        if(optionalLiked.isEmpty()){
             liked = new Liked();
             Board findBoard = findBoard(boardId);
             liked.addBoard(findBoard);
@@ -160,7 +160,7 @@ public class BoardService {
             likedRepository.save(liked);
         }
         else{
-            likedRepository.delete(likedList.get(0));
+            likedRepository.delete(optionalLiked.get());
         }
     }
 
