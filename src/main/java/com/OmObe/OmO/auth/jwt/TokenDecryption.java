@@ -22,20 +22,25 @@ public class TokenDecryption {
 
     // JWT 토큰을 해석하여 토큰 사용자를 알아내는 함수
     public Member getWriterInJWTToken(String token) throws JsonProcessingException {
-        String[] chunks = token.split("\\.");
+        if(token != null) {
+            String[] chunks = token.split("\\.");
 
-        Base64.Decoder decoder = Base64.getUrlDecoder();
+            Base64.Decoder decoder = Base64.getUrlDecoder();
 
-        String payload = new String(decoder.decode(chunks[1]));
+            String payload = new String(decoder.decode(chunks[1]));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> returnMap = objectMapper.readValue(payload, Map.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> returnMap = objectMapper.readValue(payload, Map.class);
 
-        Object objectWriter = returnMap.get("sub");
-        String email = objectWriter.toString();
+            Object objectWriter = returnMap.get("sub");
+            String email = objectWriter.toString();
 
-        Optional<Member> member = memberRepository.findByEmail(email);
-        Member writer = member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        return writer;
+            Optional<Member> member = memberRepository.findByEmail(email);
+            Member writer = member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+            return writer;
+        }
+        else {
+            return null;
+        }
     }
 }

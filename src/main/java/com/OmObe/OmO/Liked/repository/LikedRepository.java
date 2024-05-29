@@ -13,6 +13,5 @@ import java.util.Optional;
 
 @Repository
 public interface LikedRepository extends JpaRepository<Liked, Long> {
-    List<Liked> findByBoardAndMember(Board board, Member member);
-
+    Optional<Liked> findByBoardAndMember(Board board, Member member);
 }

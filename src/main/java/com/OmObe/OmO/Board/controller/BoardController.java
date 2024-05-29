@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,10 +83,11 @@ public class BoardController {
     }
 
     @GetMapping("/{board-id}")
-    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId){
+    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId,
+                                   @RequestHeader("Authorization") @Nullable String token){
         Board board = boardService.getBoard(boardId);
 
-        return new ResponseEntity<>(mapper.boardToBoardResponseDto(board),
+        return new ResponseEntity<>(mapper.boardToBoardResponseDto(board,token),
                 HttpStatus.OK);
     }
 
@@ -96,7 +98,8 @@ public class BoardController {
     @GetMapping("/Trouble")
     public ResponseEntity getTroubleBoards(@RequestParam(defaultValue = "1") int page,
                                            @Positive @RequestParam(defaultValue = "10") int size,
-                                           @RequestParam String sorting){
+                                           @RequestParam String sorting,
+                                           @RequestHeader("Authorization") @Nullable String token){
         Slice<Board> pageBoards = null;
             switch (sorting){
                 case "createdAt":
@@ -114,13 +117,14 @@ public class BoardController {
             }
         List<Board> boards = pageBoards.getContent();
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards),pageBoards),HttpStatus.OK);
+                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards,token),pageBoards),HttpStatus.OK);
     }
 
     @GetMapping("/Free")
     public ResponseEntity getFreeBoards(@RequestParam(defaultValue = "1") int page,
                                            @Positive @RequestParam(defaultValue = "10") int size,
-                                           @RequestParam String sorting){
+                                           @RequestParam String sorting,
+                                        @RequestHeader("Authorization") @Nullable String token){
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
@@ -138,13 +142,14 @@ public class BoardController {
         }
         List<Board> boards = pageBoards.getContent();
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards),pageBoards),HttpStatus.OK);
+                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards,token),pageBoards),HttpStatus.OK);
     }
 
     @GetMapping("/Qna")
     public ResponseEntity getQnaBoards(@RequestParam(defaultValue = "1") int page,
                                         @Positive @RequestParam(defaultValue = "10") int size,
-                                        @RequestParam String sorting){
+                                        @RequestParam String sorting,
+                                       @RequestHeader("Authorization") @Nullable String token){
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
@@ -162,13 +167,14 @@ public class BoardController {
         }
         List<Board> boards = pageBoards.getContent();
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards),pageBoards),HttpStatus.OK);
+                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards,token),pageBoards),HttpStatus.OK);
     }
 
     @GetMapping("/Qna/FAQ")
     public ResponseEntity getFaqBoards(@RequestParam(defaultValue = "1") int page,
                                         @Positive @RequestParam(defaultValue = "10") int size,
-                                        @RequestParam String sorting){
+                                        @RequestParam String sorting,
+                                       @RequestHeader("Authorization") @Nullable String token){
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
@@ -186,7 +192,7 @@ public class BoardController {
         }
         List<Board> boards = pageBoards.getContent();
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards),pageBoards),HttpStatus.OK);
+                new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards,token),pageBoards),HttpStatus.OK);
     }
 
     @DeleteMapping("/{board-id}")

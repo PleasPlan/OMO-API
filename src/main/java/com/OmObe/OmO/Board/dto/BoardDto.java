@@ -2,7 +2,6 @@ package com.OmObe.OmO.Board.dto;
 
 import com.OmObe.OmO.Comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -56,6 +55,7 @@ public class BoardDto {
         private LocalDateTime createdDate;
         private int likeCount;
         private int viewCount;
+        private boolean myLiked;
         private List<CommentDto.Response> comments;
     }
 }
