@@ -60,13 +60,16 @@ public class BoardMapper {
             LocalDateTime createdTime = board.getCreatedAt();
             int likeCount = board.getLikes().size();
             int viewCount = board.getViewCount();
+
+            boolean myLiked = false;
+
             List<CommentDto.Response> commentResponseDtos = new ArrayList<>();
             for(Comment c : board.getComments()){
                 CommentDto.Response commentDto = commentMapper.commentToCommentResponseDto(c);
                 commentResponseDtos.add(commentDto);
             }
 
-            BoardDto.Response response = new BoardDto.Response(boardId,title,content,type,writer,profileURL,createdTime,likeCount,viewCount,commentResponseDtos);
+            BoardDto.Response response = new BoardDto.Response(boardId,title,content,type,writer,profileURL,createdTime,likeCount,viewCount,myLiked,commentResponseDtos);
             return response;
         }
     }
