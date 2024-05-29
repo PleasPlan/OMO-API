@@ -75,17 +75,17 @@ public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest 
             member = new Member();
             member.setEmail(email);
 
-            // 회원 권한 설정
+            // 회원 등급에 따른 권한, 닉네임 설정
             log.info("adminMail : {}", adminMail);
             if (member.getEmail().equals(adminMail)) {
                 member.setMemberRole(Member.MemberRole.ADMIN); // 관리자 이메일이면 회원의 권한은 ADMIN
+                member.setNickname("OmO 관리자"); // 관리자 닉네임은 "OmO 관리자"로 설정
             }else{
                 member.setMemberRole(Member.MemberRole.GUEST); // 관리자 이메일이 아니면 최초 로그인 시 회원의 권한은 GUEST
+                // 최초 로그인 시 회원 닉네임 임의 지정
+                String tmpNickname = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+                member.setNickname(tmpNickname);
             }
-
-            // 최초 로그인 시 회원 닉네임 임의 지정
-            String tmpNickname = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
-            member.setNickname(tmpNickname);
 
             member.setPassword(tmpPassword);
             member.setOAuth(true);
