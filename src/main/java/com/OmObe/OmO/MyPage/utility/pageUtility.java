@@ -16,4 +16,11 @@ public class pageUtility<T> {
         return (Specification<T>) ((root, query, builder) ->
                 builder.equal(root.get("member"),member));
     }
+    public Specification<T> withMemberAndType(Member member,String type){
+        return (Specification<T>) ((root, query, builder) ->
+                builder.and(
+                builder.equal(root.get("member"),member),
+                builder.equal(root.get("type"),type))
+        );
+    }
 }
