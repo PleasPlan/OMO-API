@@ -65,6 +65,8 @@ public class CommentMapper {
             response.setContent(content);
 //            TODO : 프로필 url이 주석 해제되면 다시 해제할 것.
 //            response.setProfileURL(profileURL);
+            response.setCreatedAt(comment.getCreatedAt());
+            response.setModifiedAt(comment.getModifiedAt());
             return response;
         }
     }

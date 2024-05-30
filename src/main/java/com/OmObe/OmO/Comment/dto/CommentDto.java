@@ -34,5 +34,7 @@ public class CommentDto {
 //        TODO : 프로필 url이 주석 해제되면 다시 해제할 것.
 //        private String profileURL;
         private String content;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
     }
 }
