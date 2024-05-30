@@ -109,20 +109,12 @@ public class SecurityConfiguration {
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
-            AuthenticationManager authentic = builder.getSharedObject(AuthenticationManager.class);
-
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authentic, jwtTokenizer, tokenService, redisService);
-//            jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
-            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, redisTemplate, memberRepository);
 
             JwtLogoutFilter jwtLogoutFilter = new JwtLogoutFilter(jwtTokenizer, redisService, tokenService);
 
             builder
-                    .addFilter(jwtAuthenticationFilter) // spring security filter chain에 JwtAuthenticationFilter 추가
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class) // JwtAuthenticationFilter jwtVerificationFilter 추가
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class) // OAuth2LoginAuthenticationFilter 이후 JwtVerificationFilter 추가
                     .addFilterAfter(jwtLogoutFilter, JwtVerificationFilter.class); // JwtVerificationFilter 이후 jwtLogoutFilter 추가
 
