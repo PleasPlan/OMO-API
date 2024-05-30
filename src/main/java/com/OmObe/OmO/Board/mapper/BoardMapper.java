@@ -126,8 +126,9 @@ public class BoardMapper {
                     throw new RuntimeException(e);
                 }
                 Optional<Liked> optionalLiked = likedRepository.findByBoardAndMember(board,loginMember);
-                Liked liked = optionalLiked.orElseThrow();
-                myLiked = board.getLikes().contains(liked);
+                if(optionalLiked.isPresent()) {
+                    myLiked = board.getLikes().contains(optionalLiked.get());
+                }
             }
 
 
