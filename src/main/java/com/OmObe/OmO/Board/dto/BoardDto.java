@@ -49,7 +49,7 @@ public class BoardDto {
         private long BoardId;
         private String title;
         private String content;
-        private String type;
+        private String category;
         private String writer;
         private String profileURL;
         private LocalDateTime createdDate;
