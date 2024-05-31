@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -67,11 +66,10 @@ public class MyPageController {
     @GetMapping("/boards")
     public ResponseEntity getMyBoard(@RequestHeader("Authorization") String token,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @Positive @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam("category") String type) throws JsonProcessingException {
+                                     @Positive @RequestParam(defaultValue = "10") int size) throws JsonProcessingException {
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
-        List<Board> boardList = myPageService.getMyBoard(member,type, page - 1, size);
+        List<Board> boardList = myPageService.getMyBoard(member, page - 1, size);
         if (boardList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
