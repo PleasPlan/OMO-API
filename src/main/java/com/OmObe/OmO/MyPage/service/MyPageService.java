@@ -93,21 +93,9 @@ public class MyPageService {
         }
     }
 
-    public List<Board> getMyBoard(Member member,String type, int page, int size) throws JsonProcessingException {
+    public List<Board> getMyBoard(Member member, int page, int size) throws JsonProcessingException {
         pageUtility<Board> utility = new pageUtility<>();
-        Slice<Board> boards = null;
-        switch (type){
-            case "TROUBLE":
-            case "QNA":
-            case "FREE":{
-                boards = utility.convertToSlice(boardRepository.findAll(utility.withMemberAndType(member,type),PageRequest.of(page,size)));
-                break;
-            }
-            default:{
-                boards = utility.convertToSlice(boardRepository.findAll(utility.withMember(member),PageRequest.of(page,size)));
-            }
-        }
-
+        Slice<Board> boards = utility.convertToSlice(boardRepository.findAll(utility.withMember(member),PageRequest.of(page,size)));
         List<Board> boardList = boards.getContent();
         return boardList;
     }
