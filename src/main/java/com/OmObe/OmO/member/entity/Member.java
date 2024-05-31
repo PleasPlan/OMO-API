@@ -113,7 +113,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<PlaceRecommend> placeRecommends = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.PERSIST)
