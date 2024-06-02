@@ -28,6 +28,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+	// spring actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// jsr305 - for NPE caused by @Nullable Annotation
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 	// oauth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
