@@ -72,6 +72,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/signup").permitAll()
                         .antMatchers(HttpMethod.GET, "/board/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/checkNickname").permitAll()
                         .anyRequest().authenticated()
                 ).oauth2Login(oauth2 -> oauth2 // oauth2 인증 활성화
                         .successHandler(new OAuth2MemberSuccessHandler(tokenService, oAuth2MemberService, authorityUtils, redisService,jwtTokenizer)));
