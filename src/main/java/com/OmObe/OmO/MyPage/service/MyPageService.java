@@ -11,6 +11,7 @@ import com.OmObe.OmO.Place.entity.PlaceRecommend;
 import com.OmObe.OmO.Place.repository.PlaceLikeRepository;
 import com.OmObe.OmO.Place.repository.PlaceRecommendRepository;
 import com.OmObe.OmO.Place.service.PlaceService;
+import com.OmObe.OmO.Review.service.ReviewService;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
 import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.exception.ExceptionCode;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -54,6 +56,7 @@ public class MyPageService {
     private final TokenDecryption tokenDecryption;
     private final MemberMapper mapper;
     private final MemberRepository memberRepository;
+    private final ReviewService reviewService; // 이미지 파일 관련 메서드가 ReviewService에 있음 todo: 이미지 파일 관련 기능은 따로 분리해서 관리할 것
 
     public String findPlaceLikedByMember(Member member, int page, int size){
         pageUtility<PlaceLike> utility = new pageUtility<>();
@@ -275,7 +278,7 @@ public class MyPageService {
      * 3. 사용자의 인증 상태 검증
      * 4. 프로필 이미지 수정
      */
-    public Member updateProfileImage(Long memberId, MemberDto.ProfileImagePatch dto, String token) {
+    public Member updateProfileImage(Long memberId, String token, MultipartFile file) {
         // 1. 토큰의 소유자와 정보를 변경하려는 회원이 같은 사람인지 검증
         try {
             Member tokenCheckedMember = tokenDecryption.getWriterInJWTToken(token);
@@ -286,7 +289,7 @@ public class MyPageService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
 
-        Member member = mapper.profileImagePatchDtoToMember(dto);
+//        Member member = mapper.profileImagePatchDtoToMember(dto);
 
         // 2. 수정하려는 회원의 존재 여부 검증
         Member findMember = memberService.findVerifiedMember(memberId);
@@ -295,7 +298,24 @@ public class MyPageService {
         memberService.verifiedAuthenticatedMember(memberId);
 
         // 4. 프로필 이미지 수정
-        findMember.setProfileImageUrl(member.getProfileImageUrl());
+        Optional.ofNullable(file)
+                .ifPresent(image -> {
+                    log.info("isExistFile : {}", findMember.isExistFile());
+                    try{
+                        // 기존 프로필 이미지 파일이 있는 경우(findMember.isExistFile()이 true인 경우) 해당 파일 삭제
+                        if(findMember.isExistFile()){
+                            reviewService.deleteImage(findMember.getProfileImageUrl());
+                        }
+                        findMember.setProfileImageUrl(null);
+                        if(file != null){ // 이미지 파일이 있는 경우 해당 이미지 파일을 저장하고 이미지 이름 설정
+                            findMember.setProfileImageUrl(reviewService.uploadImageToFileSystem(file));
+                        }
+                    }catch (IOException e){
+                        throw new RuntimeException(e);
+                    }
+                    // 이미지 파일이 저장되었기 때문에 isExistFile은 true로 설정
+                    findMember.setExistFile(true);
+                });
 
         return memberRepository.save(findMember);
     }

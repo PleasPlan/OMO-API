@@ -19,7 +19,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
@@ -97,8 +99,8 @@ public class MyPageController {
     @PatchMapping("/profileImage/{memberId}")
     public ResponseEntity patchProfileImage(@Valid @PathVariable("memberId") Long memberId,
                                             @RequestHeader("Authorization") String token,
-                                            @Valid @RequestBody MemberDto.ProfileImagePatch dto) {
-        myPageService.updateProfileImage(memberId, dto, token);
+                                            @Nullable @RequestParam("image")MultipartFile file) {
+        myPageService.updateProfileImage(memberId, token, file);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
