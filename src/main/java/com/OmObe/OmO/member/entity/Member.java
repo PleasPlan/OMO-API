@@ -70,6 +70,14 @@ public class Member {
     @Column
     private boolean isOAuth; // OAuth2 사용 여부
 
+    /* 프로필 이미지 변경 시 기존 이미지 파일을 지워야 하는데 oauth에서 받아온 이미지라면 이미지 파일이 없기 때문에
+       이미지 파일 존재 여부를 파악하기 위해 isExistFile을 통해 파악한다.
+       isExistFile - true : 이미지 파일 존재
+       isExistFile - false : 이미지 파일이 존재하지 않음. oauth 로그인 시 받아온 기본 이미지 url.
+     */
+    @Column
+    private boolean isExistFile; // oauth에서 제공된 기본 이미지가 아닌 사용자가 설정한 이미지 사용 여부 (default : false)
+
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE; // 회원 상태 -> 기본값은 활동 상태
@@ -195,6 +203,10 @@ public class Member {
 
     public void setMemberRole(MemberRole memberRole) {
         this.memberRole = memberRole;
+    }
+
+    public void setExistFile(boolean existFile) {
+        isExistFile = existFile;
     }
 
     public enum MemberRole{ // 사용자 권한 등급
