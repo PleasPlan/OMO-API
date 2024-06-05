@@ -1,6 +1,5 @@
-package com.OmObe.OmO.Review.controller;
+package com.OmObe.OmO.ImageManager;
 
-import com.OmObe.OmO.Review.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,15 +17,15 @@ import java.io.IOException;
 @Validated
 @RequestMapping("/image")
 public class ImageController {
-    private final ReviewService reviewService;
+    private final ImageManager imageManager;
 
-    public ImageController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    public ImageController(ImageManager imageManager) {
+        this.imageManager = imageManager;
     }
 
     @GetMapping("/{image-name}")
     public ResponseEntity getImage(@PathVariable("image-name") String imageName) throws IOException {
-        byte[] imageData = reviewService.downloadImageFromFileSystem(imageName);
+        byte[] imageData = imageManager.downloadImageFromFileSystem(imageName);
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG)
                 .body(imageData);
     }

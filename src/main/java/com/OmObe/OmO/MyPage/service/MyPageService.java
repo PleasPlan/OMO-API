@@ -2,6 +2,7 @@ package com.OmObe.OmO.MyPage.service;
 
 import com.OmObe.OmO.Board.entity.Board;
 import com.OmObe.OmO.Board.repository.BoardRepository;
+import com.OmObe.OmO.ImageManager.ImageManager;
 import com.OmObe.OmO.MyCourse.entity.MyCourse;
 import com.OmObe.OmO.MyPage.dto.MyPageDto;
 import com.OmObe.OmO.MyPage.utility.pageUtility;
@@ -57,6 +58,7 @@ public class MyPageService {
     private final MemberMapper mapper;
     private final MemberRepository memberRepository;
     private final ReviewService reviewService; // 이미지 파일 관련 메서드가 ReviewService에 있음 todo: 이미지 파일 관련 기능은 따로 분리해서 관리할 것
+    private final ImageManager imageManager;
 
     public String findPlaceLikedByMember(Member member, int page, int size){
         pageUtility<PlaceLike> utility = new pageUtility<>();
@@ -304,11 +306,11 @@ public class MyPageService {
                     try{
                         // 기존 프로필 이미지 파일이 있는 경우(findMember.isExistFile()이 true인 경우) 해당 파일 삭제
                         if(findMember.isExistFile()){
-                            reviewService.deleteImage(findMember.getProfileImageUrl());
+                            imageManager.deleteImage(findMember.getProfileImageUrl());
                         }
                         findMember.setProfileImageUrl(null);
                         if(file != null){ // 이미지 파일이 있는 경우 해당 이미지 파일을 저장하고 이미지 이름 설정
-                            findMember.setProfileImageUrl(reviewService.uploadImageToFileSystem(file));
+                            findMember.setProfileImageUrl(imageManager.uploadImageToFileSystem(file));
                         }
                     }catch (IOException e){
                         throw new RuntimeException(e);
