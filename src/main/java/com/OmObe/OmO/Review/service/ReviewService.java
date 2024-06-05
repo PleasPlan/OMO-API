@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -193,7 +195,15 @@ public class ReviewService {
     }
 
     public byte[] downloadImageFromFileSystem(String fileName) throws IOException {
-        Optional<FileData> optionalFileData = fileDataRepository.findByName(fileName);
+        String keyword;
+        try{
+            keyword = URLEncoder.encode(fileName, "UTF-8");
+        }catch (UnsupportedEncodingException e){
+            throw new RuntimeException("Encoding Failed",e);
+        }
+
+
+        Optional<FileData> optionalFileData = fileDataRepository.findByName(keyword);
         String filePath = optionalFileData.get().getFilePath();
         byte[] images = Files.readAllBytes(new File(filePath).toPath());
         return images;
