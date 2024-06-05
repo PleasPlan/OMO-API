@@ -1,5 +1,6 @@
 package com.OmObe.OmO.Review.service;
 
+import com.OmObe.OmO.ImageManager.ImageManager;
 import com.OmObe.OmO.Review.entity.FileData;
 import com.OmObe.OmO.Review.entity.Review;
 import com.OmObe.OmO.Review.repository.FileDataRepository;
@@ -36,15 +37,18 @@ public class ReviewService {
     private final MemberService memberService;
     private final TokenDecryption tokenDecryption;
     private final FileDataRepository fileDataRepository;
+    private final ImageManager imageManager;
 
     public ReviewService(ReviewRepository reviewRepository,
                          MemberService memberService,
                          TokenDecryption tokenDecryption,
-                         FileDataRepository fileDataRepository) {
+                         FileDataRepository fileDataRepository,
+                         ImageManager imageManager) {
         this.reviewRepository = reviewRepository;
         this.memberService = memberService;
         this.tokenDecryption = tokenDecryption;
         this.fileDataRepository = fileDataRepository;
+        this.imageManager = imageManager;
     }
 
     /**
@@ -64,7 +68,7 @@ public class ReviewService {
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             review.setMember(member);
             if(file != null) {
-                review.setImageName(uploadImageToFileSystem(file));
+                review.setImageName(imageManager.uploadImageToFileSystem(file));
             }
         }catch (JsonProcessingException je) {
             throw new RuntimeException(je);
@@ -110,10 +114,10 @@ public class ReviewService {
         Optional.ofNullable(file)
                 .ifPresent(image -> {
                     try {
-                        deleteImage(findReview.getImageName());
+                        imageManager.deleteImage(findReview.getImageName());
                         findReview.setImageName(null);
                         if(file != null) {
-                            findReview.setImageName(uploadImageToFileSystem(file));
+                            findReview.setImageName(imageManager.uploadImageToFileSystem(file));
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -161,7 +165,7 @@ public class ReviewService {
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
-        deleteImage(findReview.getImageName());
+        imageManager.deleteImage(findReview.getImageName());
         // 3. 리뷰 삭제
         reviewRepository.delete(findReview);
     }
@@ -178,7 +182,7 @@ public class ReviewService {
                 builder.equal(root.get("placeId"),placeId));
     }
 
-    public String uploadImageToFileSystem(MultipartFile file) throws IOException {
+/*    public String uploadImageToFileSystem(MultipartFile file) throws IOException {
         String filePath = FILE_PATH+file.getOriginalFilename();
         FileData fileData = fileDataRepository.save(FileData.builder()
                         .name(file.getOriginalFilename())
@@ -215,5 +219,5 @@ public class ReviewService {
         File image = new File(filePath);
         image.delete();
         fileDataRepository.delete(optionalFileData.get());
-    }
+    }*/
 }
