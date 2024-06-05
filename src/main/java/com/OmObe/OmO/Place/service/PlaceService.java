@@ -229,7 +229,7 @@ public class PlaceService {
                             ObjectNode reviewNode = objectMapper.createObjectNode();
                             reviewNode.put("writer", review.getMember().getNickname());
                             reviewNode.put("content", review.getContent());
-                            // TODO: 이미지 넣어야 됨.
+                            reviewNode.put("imageName",review.getImageName());
                             reviews.add(reviewNode);
                         }
                     }
