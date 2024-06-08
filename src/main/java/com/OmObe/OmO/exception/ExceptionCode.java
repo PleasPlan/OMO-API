@@ -5,7 +5,7 @@ import lombok.Getter;
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "Member not found. Please check the member ID and try again."),
     EMAIL_ALREADY_EXIST(404, "This Email is already exist. Please check the email"),
-    NICKNAME_ALREADY_EXIST(404, "This Email is already exist. Please check the nickname"),
+    NICKNAME_ALREADY_EXIST(404, "This Nickname is already exist. Please check the nickname"),
     BOARD_NOT_FOUND(404,"Missing Board"),
     COMMENT_NOT_FOUND(404,"Missing Comment"),
     PASSWORD_NOT_CORRECT(404, "Password is not correct. Pleas check the password"),

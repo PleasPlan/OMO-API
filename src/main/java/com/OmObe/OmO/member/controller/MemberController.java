@@ -5,6 +5,7 @@ import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.mapper.MemberMapper;
 import com.OmObe.OmO.member.repository.MemberRepository;
 import com.OmObe.OmO.member.service.MemberService;
+import com.OmObe.OmO.response.ResponseDto;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,8 @@ public class MemberController {
         // 닉네임 중복 검증 메서드 실행
         memberService.verifyExistsNickname(nickname.getNickname());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        // 닉네임 중복 검증 성공 시 상태 코드와 상태 메시지 설정
+        ResponseDto.Response response = new ResponseDto.Response(200, "사용 가능한 닉네임입니다.");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
