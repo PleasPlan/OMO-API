@@ -40,4 +40,13 @@ public class MyPageDto {
         private int myWrittenBoardCount; // 내가 쓴 글 수
         private int myCourseCount; // 나의 코스 수
     }
+
+    // 마이페이지 - 프로필 이미지 변경 후 respont dto
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class profileImageResponse{
+        private String profileImageUrl; // 이미지 파일 이름
+    }
 }
