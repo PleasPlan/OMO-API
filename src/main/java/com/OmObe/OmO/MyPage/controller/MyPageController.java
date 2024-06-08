@@ -6,6 +6,7 @@ import com.OmObe.OmO.Board.mapper.BoardMapper;
 import com.OmObe.OmO.Board.response.MultiResponseDto;
 import com.OmObe.OmO.Board.response.PageInfo;
 import com.OmObe.OmO.MyPage.dto.MyPageDto;
+import com.OmObe.OmO.MyPage.mapper.MyPageMapper;
 import com.OmObe.OmO.MyPage.service.MyPageService;
 import com.OmObe.OmO.Place.entity.Place;
 import com.OmObe.OmO.Place.entity.PlaceLike;
@@ -35,11 +36,13 @@ public class MyPageController {
     private final MyPageService myPageService;
     private final TokenDecryption tokenDecryption;
     private final BoardMapper boardMapper;
+    private final MyPageMapper mapper;
 
-    public MyPageController(MyPageService myPageService, TokenDecryption tokenDecryption, BoardMapper boardMapper) {
+    public MyPageController(MyPageService myPageService, TokenDecryption tokenDecryption, BoardMapper boardMapper, MyPageMapper mapper) {
         this.myPageService = myPageService;
         this.tokenDecryption = tokenDecryption;
         this.boardMapper = boardMapper;
+        this.mapper = mapper;
     }
 
     @GetMapping("/likes")
@@ -100,9 +103,11 @@ public class MyPageController {
     public ResponseEntity patchProfileImage(@Valid @PathVariable("memberId") Long memberId,
                                             @RequestHeader("Authorization") String token,
                                             @Nullable @RequestParam("image")MultipartFile file) {
-        myPageService.updateProfileImage(memberId, token, file);
+        Member member = myPageService.updateProfileImage(memberId, token, file);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        // 수정한 프로필 이미지의 파일명을 응답으로 제공
+        MyPageDto.profileImageResponse profileImageResponse = mapper.memberToProfileImageName(member);
+        return new ResponseEntity<>(profileImageResponse,HttpStatus.OK);
     }
 
     // 닉네임 수정
