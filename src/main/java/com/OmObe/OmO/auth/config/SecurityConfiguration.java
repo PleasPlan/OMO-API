@@ -1,6 +1,7 @@
 package com.OmObe.OmO.auth.config;
 
 import com.OmObe.OmO.auth.filter.JwtAuthenticationFilter;
+import com.OmObe.OmO.auth.filter.JwtExceptionFilter;
 import com.OmObe.OmO.auth.filter.JwtLogoutFilter;
 import com.OmObe.OmO.auth.filter.JwtVerificationFilter;
 import com.OmObe.OmO.auth.handler.*;
@@ -110,12 +111,14 @@ public class SecurityConfiguration {
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
+            JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter();
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, redisTemplate, memberRepository);
 
             JwtLogoutFilter jwtLogoutFilter = new JwtLogoutFilter(jwtTokenizer, redisService, tokenService);
 
             builder
+                    .addFilterBefore(jwtExceptionFilter, OAuth2LoginAuthenticationFilter.class) // JwtExceptionFilter 추가
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class) // OAuth2LoginAuthenticationFilter 이후 JwtVerificationFilter 추가
                     .addFilterAfter(jwtLogoutFilter, JwtVerificationFilter.class); // JwtVerificationFilter 이후 jwtLogoutFilter 추가
 
