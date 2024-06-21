@@ -8,6 +8,7 @@ import com.OmObe.OmO.member.dto.MemberLoginDto;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter { // request 당
 
         if (!StringUtils.isEmpty(isLogout)) { // redis에 AccessToken이 있다면 로그아웃된 토큰이므로 예외처리
             log.info("# Invalid Token");
-            throw new UnsupportedJwtException("Invalid Token!");
+            throw new JwtException("Invalid Token");
         }
 
         try{
@@ -59,9 +60,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter { // request 당
         } catch (ExpiredJwtException ee) {
             // 액세스 토큰이 만료된 경우
             log.info("catch ExpiredJwtException");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Access-Token expired");
-            request.setAttribute("exception", ee);
+            throw new JwtException("ExpiredJwtException");
+
 
         } catch (MalformedJwtException me) {
             // JWT 토큰이 형식에 맞지 않는 경우
@@ -69,8 +69,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter { // request 당
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         //  TODO : "java.lang.IllegalStateException: getWriter() has already been called for this response"의 오류 원인
             //response.getWriter().write("Invalid Access-Token");
-            request.setAttribute("exception", me);
-
+//            request.setAttribute("exception", me);
+            throw new JwtException("MalformedJwtException");
         } catch (Exception e) {
             request.setAttribute("exception", e);
         }
