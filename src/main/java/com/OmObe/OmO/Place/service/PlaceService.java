@@ -66,7 +66,7 @@ public class PlaceService {
         this.tokenDecryption = tokenDecryption;
     }
 
-    public String getPlaces(String category, PairJ<Double, Double> middle, int page, String token) throws JsonProcessingException {
+    public String getPlaces(String category, PairJ<Double, Double> middle, int page, String token){
         String keyword;
         try{
             keyword = URLEncoder.encode(category, "UTF-8");
@@ -118,6 +118,33 @@ public class PlaceService {
             responseBody = getOnePlace(responseBody,placeId,member);
         }
 
+
+        return responseBody;
+    }
+
+    public String getPlace(String placeName,int page,String token) {
+
+        String keyword;
+        try{
+            keyword = URLEncoder.encode(placeName, "UTF-8");
+        }catch (UnsupportedEncodingException e){
+            throw new RuntimeException("Encoding Failed",e);
+        }
+
+        String webAddress = "https://dapi.kakao.com/v2/local/search/keyword.json?page="+page+"&query="+keyword;
+
+        Map<String, String> requestHeader = new HashMap<>();
+//        requestHeader.put("X-Naver-Client-Id", id);
+//        requestHeader.put("X-Naver-Client-Secret", pw);
+        requestHeader.put("Authorization", "KakaoAK "+key);
+        String responseBody = get(webAddress, requestHeader);
+
+        Member member = null;
+        if(token != null){
+            member = tokenDecryption.getWriterInJWTToken(token);
+        }
+
+        responseBody = idTracker(responseBody,member);
 
         return responseBody;
     }
