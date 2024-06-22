@@ -81,8 +81,6 @@ public class NoticeService {
             회원의 이메일을 검증하여 회원의 정보와 권한을 파악하여 서비스에 접근 허용 및 제한 한다.
              */
             memberService.verifiedAuthenticatedMember(member.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
@@ -138,8 +136,6 @@ public class NoticeService {
             회원의 이메일을 검증하여 회원의 정보와 권한을 파악하여 서비스에 접근 허용 및 제한 한다.
              */
             memberService.verifiedAuthenticatedMember(member.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }

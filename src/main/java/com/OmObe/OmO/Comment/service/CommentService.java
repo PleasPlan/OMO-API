@@ -43,8 +43,6 @@ public class CommentService {
             Member member = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             comment.setMember(member);
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
@@ -74,8 +72,6 @@ public class CommentService {
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             // 댓글 작성자의 토큰과 현재 request header로 들어온 토큰 비교하여 검증
             memberService.verifiedAuthenticatedMember(findComment.getMember().getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
@@ -121,8 +117,6 @@ public class CommentService {
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             // 댓글 작성자의 토큰과 현재 request header에 포함된 토큰은 비교
             memberService.verifiedAuthenticatedMember(findComment.getMember().getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
