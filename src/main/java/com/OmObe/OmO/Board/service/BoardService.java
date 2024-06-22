@@ -48,8 +48,6 @@ public class BoardService {
             Member member = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             board.setMember(member);
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
@@ -71,8 +69,6 @@ public class BoardService {
             Member member = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             memberService.verifiedAuthenticatedMember(findBoard.getMember().getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
@@ -132,8 +128,6 @@ public class BoardService {
              */
             Member member = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(member.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }

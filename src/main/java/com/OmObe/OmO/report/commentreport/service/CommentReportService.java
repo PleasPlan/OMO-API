@@ -61,8 +61,6 @@ public class CommentReportService {
             Member member = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             commentReport.setMember(member);
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
@@ -82,8 +80,6 @@ public class CommentReportService {
         try{
             Member member = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(member.getMemberId());
-        }catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }

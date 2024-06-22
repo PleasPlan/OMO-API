@@ -120,11 +120,9 @@ public class BoardMapper {
             boolean myLiked = false;
             if(token != null){
                 Member loginMember = null;
-                try {
-                    loginMember = tokenDecryption.getWriterInJWTToken(token);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
+
+                loginMember = tokenDecryption.getWriterInJWTToken(token);
+
                 Optional<Liked> optionalLiked = likedRepository.findByBoardAndMember(board,loginMember);
                 if(optionalLiked.isPresent()) {
                     myLiked = board.getLikes().contains(optionalLiked.get());

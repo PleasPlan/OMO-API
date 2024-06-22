@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Request;
+import org.apache.coyote.Response;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class PlaceController {
                                     @RequestHeader @Range(min = 0,max = 90) double y,
                                     @RequestHeader @Range(min = -180,max = 180) double x,
                                     @RequestParam("page") int page,
-                                    @RequestHeader("Authorization") @Nullable String token) throws JsonProcessingException {
+                                    @RequestHeader("Authorization") @Nullable String token){
         PairJ<Double, Double> middle = new PairJ<>();
         middle.setFirst(y);    // y (위도)
         middle.setSecond(x);   // x (경도)
@@ -60,17 +61,23 @@ public class PlaceController {
     @GetMapping("/{placeName}")
     public ResponseEntity getPlace(@PathVariable("placeName") String placeName,
                                    @RequestHeader("placeId") long placeId,
-                                   @Nullable @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                   @Nullable @RequestHeader("Authorization") String token){
         Member member = null;
         if(token != null){
-            try{
             member = tokenDecryption.getWriterInJWTToken(token);
-            } catch (JsonProcessingException e) {
-                log.warn("JsonProcessingException 발생!");
-            }
         }
 
         String response = placeService.getPlace(placeName,placeId,member);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/name/{placeName}")
+    public ResponseEntity getPlaceWithoutId(@PathVariable("placeName") String placeName,
+                                            @RequestParam("page") int page,
+                                            @Nullable @RequestHeader("Authorization") String token){
+
+        String response = placeService.getPlace(placeName,page,token);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

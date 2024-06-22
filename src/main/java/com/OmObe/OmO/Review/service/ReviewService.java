@@ -102,8 +102,6 @@ public class ReviewService {
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             // 리뷰 작성자의 토큰과 현재 request header로 들어온 토큰 비교하여 검증
             memberService.verifiedAuthenticatedMember(findReview.getMember().getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
@@ -160,8 +158,6 @@ public class ReviewService {
             memberService.verifiedAuthenticatedMember(member.getMemberId());
             // 리뷰 작성자의 토큰과 현재 request header로 들어온 토큰 비교하여 검증
             memberService.verifiedAuthenticatedMember(findReview.getMember().getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }

@@ -285,8 +285,6 @@ public class MyPageService {
         try {
             Member tokenCheckedMember = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(tokenCheckedMember.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
@@ -335,8 +333,6 @@ public class MyPageService {
         try {
             Member tokenCheckedMember = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(tokenCheckedMember.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
@@ -372,8 +368,6 @@ public class MyPageService {
         try {
             Member tokenCheckedMember = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(tokenCheckedMember.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
@@ -404,8 +398,6 @@ public class MyPageService {
         try {
             Member tokenCheckedMember = tokenDecryption.getWriterInJWTToken(token);
             memberService.verifiedAuthenticatedMember(tokenCheckedMember.getMemberId());
-        } catch (JsonProcessingException je) {
-            throw new RuntimeException(je);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
