@@ -21,7 +21,7 @@ public class TokenDecryption {
     }
 
     // JWT 토큰을 해석하여 토큰 사용자를 알아내는 함수
-    public Member getWriterInJWTToken(String token) throws JsonProcessingException {
+    public Member getWriterInJWTToken(String token){
         if(token != null) {
             String[] chunks = token.split("\\.");
 
@@ -30,7 +30,12 @@ public class TokenDecryption {
             String payload = new String(decoder.decode(chunks[1]));
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> returnMap = objectMapper.readValue(payload, Map.class);
+            Map<String, Object> returnMap = null;
+            try {
+                returnMap = objectMapper.readValue(payload, Map.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
 
             Object objectWriter = returnMap.get("sub");
             String email = objectWriter.toString();
