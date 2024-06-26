@@ -1,5 +1,7 @@
 package com.OmObe.OmO.MyCourse.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,7 +63,7 @@ public class MyCourseDto {
     @Getter
     @AllArgsConstructor
     public static class ResponseSmallDetailPlace{
-        private String placeData;
+        private JsonNode placeData;
         private LocalDateTime time;
     }
 }

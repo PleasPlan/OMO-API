@@ -2,6 +2,12 @@ package com.OmObe.OmO.MyCourse.mapper;
 
 import com.OmObe.OmO.MyCourse.dto.MyCourseDto;
 import com.OmObe.OmO.MyCourse.entity.MyCourse;
+import com.OmObe.OmO.Place.service.PlaceService;
+import com.OmObe.OmO.member.entity.Member;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +19,13 @@ import java.util.List;
 @Component
 @Slf4j
 public class MyCourseMapper {
+
+    private final PlaceService placeService;
+
+    public MyCourseMapper(PlaceService placeService) {
+        this.placeService = placeService;
+    }
+
     public List<MyCourse> coursePostDtoToCourse(MyCourseDto.Post postDto){
         if(postDto == null){
             log.error("no value");
@@ -81,6 +94,24 @@ public class MyCourseMapper {
         }
     }
 
+    public MyCourseDto.ResponseDetailPlace courseToCourseResponseDtoDetailPlace(MyCourse course){
+        if(course == null){
+            return null;
+        } else {
+            String courseName = course.getCourseName();
+            List<MyCourseDto.ResponseSmallDetailPlace> contents = new ArrayList<>();
+            getNextCoursesMoreDetail(contents,course,course.getMember());
+            Collections.reverse(contents);
+            LocalDateTime createdAt = course.getCreatedAt();
+            LocalDateTime modifiedAt = course.getModifiedAt();
+            String writerName = course.getMember().getNickname();
+            Integer likeCount = course.getLikeCount();
+
+            MyCourseDto.ResponseDetailPlace response = new MyCourseDto.ResponseDetailPlace(courseName,contents,createdAt,modifiedAt,likeCount,writerName);
+            return response;
+        }
+    }
+
     private static void settingNextCoursePost(List<MyCourse> courseList, MyCourseDto.Post postDto){
         for(int index = postDto.getPlaceName().size()-1; index>=0; index--) {
             MyCourse course = new MyCourse();
@@ -114,5 +145,22 @@ public class MyCourseMapper {
             getNextCourses(contents, course.getNextCourse());
         }
         contents.add(responseSmall);
+    }
+    private void getNextCoursesMoreDetail(List<MyCourseDto.ResponseSmallDetailPlace> contents, MyCourse course, Member member){
+        String placeJsonData = placeService.getPlace(course.getPlaceName(),course.getPlaceId(),member);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(placeJsonData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        MyCourseDto.ResponseSmallDetailPlace responseSmallDetailPlace = new MyCourseDto.ResponseSmallDetailPlace(jsonNode,course.getTimes());
+        if(course.getNextCourse() != null){
+            getNextCoursesMoreDetail(contents, course.getNextCourse(),member);
+        }
+        contents.add(responseSmallDetailPlace);
     }
 }

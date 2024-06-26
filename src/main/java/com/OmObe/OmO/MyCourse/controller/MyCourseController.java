@@ -47,11 +47,12 @@ public class MyCourseController {
         List<MyCourse> courseList = mapper.coursePostDtoToCourse(postDto);
         Member writer = tokenDecryption.getWriterInJWTToken(token);
 
-        log.info("passed 1");
+
         MyCourse myCourse = myCourseService.createCourse(courseList,writer);
-        log.info("passed 2");
-        MyCourseDto.Response response = mapper.courseToCourseResponseDto(myCourse);
-        log.info("passed 3");
+
+//        MyCourseDto.Response response = mapper.courseToCourseResponseDto(myCourse);
+        MyCourseDto.ResponseDetailPlace response = mapper.courseToCourseResponseDtoDetailPlace(myCourse);
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -62,7 +63,7 @@ public class MyCourseController {
         Long startId = patchDto.getCourseId();
         Member writer = tokenDecryption.getWriterInJWTToken(token);
         MyCourse myCourse = myCourseService.updateCourse(patchDto.getCourseName(),courseList,startId,writer);
-        MyCourseDto.Response response = mapper.courseToCourseResponseDto(myCourse);
+        MyCourseDto.ResponseDetailPlace response = mapper.courseToCourseResponseDtoDetailPlace(myCourse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -70,7 +71,7 @@ public class MyCourseController {
     public ResponseEntity getCourse(@RequestHeader("Authorization") String token,
                                     @PathVariable("course-id") long startId){
         MyCourse myCourse = myCourseService.getCourse(startId);
-        MyCourseDto.Response response = mapper.courseToCourseResponseDto(myCourse);
+        MyCourseDto.ResponseDetailPlace response = mapper.courseToCourseResponseDtoDetailPlace(myCourse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
