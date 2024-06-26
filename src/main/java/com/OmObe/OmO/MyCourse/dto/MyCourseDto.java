@@ -33,6 +33,7 @@ public class MyCourseDto {
     @Getter
     @AllArgsConstructor
     public static class Response{
+        private Long courseId;
         private String courseName;
         private List<ResponseSmall> contents;
         private LocalDateTime createdAt;
@@ -44,6 +45,7 @@ public class MyCourseDto {
     @Getter
     @AllArgsConstructor
     public static class ResponseDetailPlace{
+        private Long courseId;
         private String courseName;
         private List<ResponseSmallDetailPlace> contents;
         private LocalDateTime createdAt;
