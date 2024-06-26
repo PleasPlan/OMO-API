@@ -41,9 +41,27 @@ public class MyCourseDto {
 
     @Getter
     @AllArgsConstructor
+    public static class ResponseDetailPlace{
+        private String courseName;
+        private List<ResponseSmallDetailPlace> contents;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private Integer likeCount;
+        private String writerName;
+    }
+
+    @Getter
+    @AllArgsConstructor
     public static class ResponseSmall{
         private String placeName;
         private Long placeId;
+        private LocalDateTime time;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ResponseSmallDetailPlace{
+        private String placeData;
         private LocalDateTime time;
     }
 }
