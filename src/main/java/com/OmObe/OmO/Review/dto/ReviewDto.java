@@ -32,6 +32,7 @@ public class ReviewDto {
         private long ReviewId;
         private String content;
         private String writer;
+        private String writerProfileImage;
         private String imageName;
         private LocalDateTime createdDate;
     }
