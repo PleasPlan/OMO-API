@@ -80,6 +80,7 @@ public class MyCourseMapper {
         if(course == null){
             return null;
         } else {
+            Long courseId = course.getCourseId();
             String courseName = course.getCourseName();
             List<MyCourseDto.ResponseSmall> contents = new ArrayList<>();
             getNextCourses(contents,course);
@@ -89,7 +90,7 @@ public class MyCourseMapper {
             String writerName = course.getMember().getNickname();
             Integer likeCount = course.getLikeCount();
 
-            MyCourseDto.Response response = new MyCourseDto.Response(courseName,contents,createdAt,modifiedAt,likeCount,writerName);
+            MyCourseDto.Response response = new MyCourseDto.Response(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName);
             return response;
         }
     }
@@ -98,6 +99,7 @@ public class MyCourseMapper {
         if(course == null){
             return null;
         } else {
+            Long courseId = course.getCourseId();
             String courseName = course.getCourseName();
             List<MyCourseDto.ResponseSmallDetailPlace> contents = new ArrayList<>();
             getNextCoursesMoreDetail(contents,course,course.getMember());
@@ -107,7 +109,7 @@ public class MyCourseMapper {
             String writerName = course.getMember().getNickname();
             Integer likeCount = course.getLikeCount();
 
-            MyCourseDto.ResponseDetailPlace response = new MyCourseDto.ResponseDetailPlace(courseName,contents,createdAt,modifiedAt,likeCount,writerName);
+            MyCourseDto.ResponseDetailPlace response = new MyCourseDto.ResponseDetailPlace(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName);
             return response;
         }
     }
