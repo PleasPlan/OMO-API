@@ -49,8 +49,9 @@ public class ReviewMapper {
             String content = review.getContent();
             LocalDateTime createdTime = review.getCreatedAt();
             String writer = review.getMember().getNickname();
+            String writerProfile = review.getMember().getProfileImageUrl();
             String imageName = review.getImageName();
-            ReviewDto.Response response = new ReviewDto.Response(reviewId,content,writer,imageName,createdTime);
+            ReviewDto.Response response = new ReviewDto.Response(reviewId,content,writer,writerProfile,imageName,createdTime);
 
             return response;
         }
