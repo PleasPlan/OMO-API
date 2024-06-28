@@ -286,9 +286,8 @@ public class PlaceService {
         return null;
     }
 
-    public String putMineOrRecommend(long placeId, String placeName, long memberId, boolean LR){
+    public String putMineOrRecommend(long placeId, String placeName, Member member, boolean LR){
         Place place = findPlace(placeId);
-        Member member = memberService.findVerifiedMember(memberId);
 
         String jsonData = getPlace(placeName,placeId,null);
         log.info(jsonData);

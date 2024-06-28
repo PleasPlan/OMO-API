@@ -49,11 +49,14 @@ public class PlaceController {
     public ResponseEntity MineOrRecommend(@PathVariable("placeName") String placeName,
                                           @RequestHeader("placeId") long placeId,
                                           @RequestHeader("Authorization") String Token,
-                                          @RequestHeader("memberId") long memberId,
                                           @RequestHeader boolean LR){
                                           // Like = true, Recommend = false
+        Member member = null;
+        if(Token != null){
+            member = tokenDecryption.getWriterInJWTToken(Token);
+        }
 
-        String response = placeService.putMineOrRecommend(placeId,placeName, memberId, LR);
+        String response = placeService.putMineOrRecommend(placeId,placeName, member, LR);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
