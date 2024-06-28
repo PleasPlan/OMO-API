@@ -43,7 +43,7 @@ public class MyCourseController {
 
     @PostMapping("/new")
     public ResponseEntity postCourse(@RequestBody MyCourseDto.Post postDto,
-                                     @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                     @RequestHeader("Authorization") String token){
         List<MyCourse> courseList = mapper.coursePostDtoToCourse(postDto);
         Member writer = tokenDecryption.getWriterInJWTToken(token);
 
@@ -58,7 +58,7 @@ public class MyCourseController {
 
     @PutMapping("/rebuild")
     public ResponseEntity patchCourse(@RequestBody MyCourseDto.Patch patchDto,
-                                      @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                      @RequestHeader("Authorization") String token){
         List<MyCourse> courseList = mapper.coursePatchDtoToCourse(patchDto);
         Long startId = patchDto.getCourseId();
         Member writer = tokenDecryption.getWriterInJWTToken(token);
@@ -87,7 +87,7 @@ public class MyCourseController {
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting,
-                                     @Nullable @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                     @Nullable @RequestHeader("Authorization") String token){
 
 
         Slice<MyCourse> pageMyCourses;
@@ -112,7 +112,7 @@ public class MyCourseController {
 
     @PutMapping("/like/{course-id}")
     public ResponseEntity postMyCourseLike(@RequestHeader("Authorization") String token,
-                                           @PathVariable("course-id") long startId) throws JsonProcessingException {
+                                           @PathVariable("course-id") long startId){
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
         String response = myCourseService.createCourseLike(member,startId);
