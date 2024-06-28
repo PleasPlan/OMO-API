@@ -228,10 +228,10 @@ public class PlaceService {
                                     countP++;
                                 }
                             }
-                            float ratioI = (float) Math.round((float) place.getPlaceRecommendList().size() / countI * 100) / 100;
-                            float ratioS = (float) Math.round((float) place.getPlaceRecommendList().size() / countS * 100) / 100;
-                            float ratioT = (float) Math.round((float) place.getPlaceRecommendList().size() / countT * 100) / 100;
-                            float ratioP = (float) Math.round((float) place.getPlaceRecommendList().size() / countP * 100) / 100;
+                            float ratioI = (float) Math.round((float) countI / place.getPlaceRecommendList().size() * 1000) / 1000;
+                            float ratioS = (float) Math.round((float) countS / place.getPlaceRecommendList().size() * 1000) / 1000;
+                            float ratioT = (float) Math.round((float) countT / place.getPlaceRecommendList().size() * 1000) / 1000;
+                            float ratioP = (float) Math.round((float) countP / place.getPlaceRecommendList().size() * 1000) / 1000;
 
                             objectNode.put("ratioI", ratioI);
                             objectNode.put("ratioS", ratioS);
@@ -558,11 +558,10 @@ public class PlaceService {
                                     countP++;
                                 }
                             }
-                            float ratioI = (float) Math.round((float) place.getPlaceRecommendList().size() / countI * 100) / 100;
-                            float ratioS = (float) Math.round((float) place.getPlaceRecommendList().size() / countS * 100) / 100;
-                            float ratioT = (float) Math.round((float) place.getPlaceRecommendList().size() / countT * 100) / 100;
-                            float ratioP = (float) Math.round((float) place.getPlaceRecommendList().size() / countP * 100) / 100;
-
+                            float ratioI = (float) Math.round((float) countI / place.getPlaceRecommendList().size() * 1000) / 1000;
+                            float ratioS = (float) Math.round((float) countS / place.getPlaceRecommendList().size() * 1000) / 1000;
+                            float ratioT = (float) Math.round((float) countT / place.getPlaceRecommendList().size() * 1000) / 1000;
+                            float ratioP = (float) Math.round((float) countP / place.getPlaceRecommendList().size() * 1000) / 1000;
                             objectNode.put("ratioI", ratioI);
                             objectNode.put("ratioS", ratioS);
                             objectNode.put("ratioT", ratioT);
