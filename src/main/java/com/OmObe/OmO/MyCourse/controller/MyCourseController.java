@@ -88,7 +88,7 @@ public class MyCourseController {
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting){
         Slice<MyCourse> pageMyCourses = null;
-        if(mbti>16){
+        if(mbti==17){
             pageMyCourses = myCourseService.findAllCourses(sorting,page-1,size);
         }else {
             pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
