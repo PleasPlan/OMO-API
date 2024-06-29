@@ -43,7 +43,7 @@ public class MyCourseController {
 
     @PostMapping("/new")
     public ResponseEntity postCourse(@RequestBody MyCourseDto.Post postDto,
-                                     @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                     @RequestHeader("Authorization") String token){
         List<MyCourse> courseList = mapper.coursePostDtoToCourse(postDto);
         Member writer = tokenDecryption.getWriterInJWTToken(token);
 
@@ -58,7 +58,7 @@ public class MyCourseController {
 
     @PutMapping("/rebuild")
     public ResponseEntity patchCourse(@RequestBody MyCourseDto.Patch patchDto,
-                                      @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                      @RequestHeader("Authorization") String token){
         List<MyCourse> courseList = mapper.coursePatchDtoToCourse(patchDto);
         Long startId = patchDto.getCourseId();
         Member writer = tokenDecryption.getWriterInJWTToken(token);
@@ -86,20 +86,27 @@ public class MyCourseController {
     public ResponseEntity getCourses(@PathVariable("mbti-num") int mbti,
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam String sorting,
-                                     @Nullable @RequestHeader("Authorization") String token) throws JsonProcessingException {
+                                     @RequestParam String sorting){
 
+        Slice<MyCourse> pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
 
-        Slice<MyCourse> pageMyCourses;
-        if (token != null) {
-            Member member = tokenDecryption.getWriterInJWTToken(token);
-            pageMyCourses = myCourseService.findMyCourses(member, page - 1, size);
-        } else {
-            pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
-        }
         List<MyCourse> courses = pageMyCourses.getContent();
-        List<MyCourseDto.Response> responses = new ArrayList<>();
-        courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDto(myCourse)));
+        List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
+        courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse)));
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
+    }
+
+    @GetMapping("/myCourse")
+    public ResponseEntity getMyCourses(@RequestHeader("Authorization") String token,
+                                       @RequestParam(defaultValue = "1") int page,
+                                       @Positive @RequestParam(defaultValue = "10") int size){
+
+        Member member = tokenDecryption.getWriterInJWTToken(token);
+        Slice<MyCourse> pageMyCourses = myCourseService.findMyCourses(member,page-1,size);
+
+        List<MyCourse> courses = pageMyCourses.getContent();
+        List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
+        courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse)));
         return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
     }
 
@@ -112,7 +119,7 @@ public class MyCourseController {
 
     @PutMapping("/like/{course-id}")
     public ResponseEntity postMyCourseLike(@RequestHeader("Authorization") String token,
-                                           @PathVariable("course-id") long startId) throws JsonProcessingException {
+                                           @PathVariable("course-id") long startId){
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
         String response = myCourseService.createCourseLike(member,startId);
