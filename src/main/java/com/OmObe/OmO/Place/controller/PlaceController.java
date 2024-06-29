@@ -1,5 +1,6 @@
 package com.OmObe.OmO.Place.controller;
 
+import com.OmObe.OmO.Place.dto.PlaceRecent;
 import com.OmObe.OmO.Place.service.PlaceService;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
 import com.OmObe.OmO.member.entity.Member;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.util.annotation.Nullable;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -71,6 +74,23 @@ public class PlaceController {
         }
 
         String response = placeService.getPlace(placeName,placeId,member);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity getRecentPlace(@RequestBody PlaceRecent.Request request,
+                                         @Nullable @RequestHeader("Authorization") String token){
+
+        List<String> placeNameList = request.getPlaceNameList();
+        List<Long> placeIdList = request.getPlaceIdList();
+
+        Member member = null;
+        if(token != null){
+            member = tokenDecryption.getWriterInJWTToken(token);
+        }
+
+        String response = placeService.getRecentPlace(placeNameList,placeIdList,member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
