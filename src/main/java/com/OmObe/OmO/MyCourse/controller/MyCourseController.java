@@ -87,8 +87,12 @@ public class MyCourseController {
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting){
-
-        Slice<MyCourse> pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
+        Slice<MyCourse> pageMyCourses = null;
+        if(mbti==17){
+            pageMyCourses = myCourseService.findAllCourses(sorting,page-1,size);
+        }else {
+            pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
+        }
 
         List<MyCourse> courses = pageMyCourses.getContent();
         List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
