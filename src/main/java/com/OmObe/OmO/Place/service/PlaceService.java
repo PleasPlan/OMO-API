@@ -95,6 +95,16 @@ public class PlaceService {
         return responseBody;
     }
 
+    public String getRecentPlace(List<String> placeNameList, List<Long> placeIdList, Member member){
+        StringBuilder allResponse = new StringBuilder();
+        for(int index = 0; index<placeIdList.size(); index++){
+            allResponse.append(getPlace(placeNameList.get(index),placeIdList.get(index),member));
+            allResponse.append(",");
+        }
+        allResponse.deleteCharAt(allResponse.length()-1);
+        return allResponse.toString();
+    }
+
     public String getPlace(String placeName,long placeId,Member member) {
 
         String keyword;
