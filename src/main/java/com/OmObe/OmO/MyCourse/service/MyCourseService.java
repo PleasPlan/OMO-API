@@ -110,12 +110,19 @@ public class MyCourseService {
 
     public Slice<MyCourse> findCourses(String sortBy,int mbti,int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMemberMBTI(mbti), PageRequest.of(page,size,
-                Sort.by(sortBy).descending().and(Sort.by("createdAt").descending()))));
+                Sort.by(sortBy).descending().and(
+                        Sort.by("createdAt").descending()))));
     }
 
     public Slice<MyCourse> findMyCourses(Member member,int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMember(member), PageRequest.of(page,size,
                 Sort.by("modifiedAt").descending())));
+    }
+
+    public Slice<MyCourse> findAllCourses(String sortBy, int page, int size){
+        return convertToSlice(myCourseRepository.findAll(PageRequest.of(page,size,
+                Sort.by(sortBy).descending().and(
+                        Sort.by("createdAt").descending()))));
     }
 
     public Integer countMyCourses(Member member){
