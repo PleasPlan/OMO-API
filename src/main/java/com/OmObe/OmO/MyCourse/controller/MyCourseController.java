@@ -82,18 +82,33 @@ public class MyCourseController {
     * 2. viewCount : 조회수 순
     * 3. likeCount : 좋아요 순
     * */
-    @GetMapping("/mbti/{mbti-num}")
-    public ResponseEntity getCourses(@PathVariable("mbti-num") int mbti,
+
+    @GetMapping("/mbti")
+    public ResponseEntity getCourses(@RequestParam("IE") String IorE,
+                                     @RequestParam("PJ") String PorJ,
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting,
                                      @Nullable @RequestHeader(value = "Authorization") String token){
-
+        Boolean IE = null;
+        Boolean PJ = null;
+        if(IorE == "I"){
+            IE = false;
+        }
+        else if(IorE == "E"){
+            IE = true;
+        }
+        if(PorJ == "P"){
+            PJ = false;
+        }
+        else if (PorJ == "J") {
+            PJ = true;
+        }
         Slice<MyCourse> pageMyCourses = null;
-        if(mbti==17){
+        if(IE == null && PJ == null){
             pageMyCourses = myCourseService.findAllCourses(sorting,page-1,size);
         }else {
-            pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
+            pageMyCourses = myCourseService.findCoursesWithFilter(sorting, IE, PJ, page - 1, size);
         }
         List<MyCourse> courses = pageMyCourses.getContent();
         if(token == null) {
