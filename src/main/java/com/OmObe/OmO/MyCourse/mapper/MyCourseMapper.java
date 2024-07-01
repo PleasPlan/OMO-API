@@ -3,6 +3,7 @@ package com.OmObe.OmO.MyCourse.mapper;
 import com.OmObe.OmO.MyCourse.dto.MyCourseDto;
 import com.OmObe.OmO.MyCourse.entity.MyCourse;
 import com.OmObe.OmO.MyCourse.entity.MyCourseLike;
+import com.OmObe.OmO.MyCourse.repository.MyCourseLikeRepository;
 import com.OmObe.OmO.Place.service.PlaceService;
 import com.OmObe.OmO.member.entity.Member;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,15 +17,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
 public class MyCourseMapper {
 
     private final PlaceService placeService;
+    private final MyCourseLikeRepository myCourseLikeRepository;
 
-    public MyCourseMapper(PlaceService placeService) {
+    public MyCourseMapper(PlaceService placeService, MyCourseLikeRepository myCourseLikeRepository) {
         this.placeService = placeService;
+        this.myCourseLikeRepository = myCourseLikeRepository;
     }
 
     public List<MyCourse> coursePostDtoToCourse(MyCourseDto.Post postDto){
@@ -129,12 +133,9 @@ public class MyCourseMapper {
             String writerName = course.getMember().getNickname();
             Integer likeCount = course.getLikeCount();
 
-            MyCourseLike temp = new MyCourseLike();
-            temp.setMyCourse(course);
-            temp.setMember(member);
-            Boolean myLiked = course.getMyCourseLikeList().contains(temp);
+            Optional<MyCourseLike> myLiked = myCourseLikeRepository.findByMemberAndMyCourse(member,course);
 
-            MyCourseDto.ResponseDetailPlaceWithLiked response = new MyCourseDto.ResponseDetailPlaceWithLiked(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName,myLiked);
+            MyCourseDto.ResponseDetailPlaceWithLiked response = new MyCourseDto.ResponseDetailPlaceWithLiked(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName,myLiked.isPresent());
             return response;
         }
     }
