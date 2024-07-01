@@ -195,22 +195,22 @@ public class PlaceService {
                         }
 
                         /*
-                         * ISTP = 1   || 0000
-                         * ISTJ = 2   || 0001
-                         * ISFP = 3   || 0010
-                         * ISFJ = 4   || 0011
-                         * INTP = 5   || 0100
-                         * INTJ = 6   || 0101
-                         * INFP = 7   || 0110
-                         * INFJ = 8   || 0111
-                         * ESTP = 9   || 1000
-                         * ESTJ = 10  || 1001
-                         * ESFP = 11  || 1010
-                         * ESFJ = 12  || 1011
-                         * ENTP = 13  || 1100
-                         * ENTJ = 14  || 1101
-                         * ENFP = 15  || 1110
-                         * ENFJ = 16  || 1111
+                         * ISTP = 0   || 0000
+                         * ISTJ = 1   || 0001
+                         * ISFP = 2   || 0010
+                         * ISFJ = 3   || 0011
+                         * INTP = 4   || 0100
+                         * INTJ = 5   || 0101
+                         * INFP = 6   || 0110
+                         * INFJ = 7   || 0111
+                         * ESTP = 8   || 1000
+                         * ESTJ = 9   || 1001
+                         * ESFP = 10  || 1010
+                         * ESFJ = 11  || 1011
+                         * ENTP = 12  || 1100
+                         * ENTJ = 13  || 1101
+                         * ENFP = 14  || 1110
+                         * ENFJ = 15  || 1111
                          * */
                         if(!place.getPlaceRecommendList().isEmpty()) {
                             int countI = 0;
@@ -220,11 +220,7 @@ public class PlaceService {
                             for (int i = 0; i < place.getPlaceRecommendList().size(); i++) {
                                 PlaceRecommend placeRecommend = place.getPlaceRecommendList().get(i);
                                 int MBTI = placeRecommend.getMember().getMbti();
-                                String binaryMBTI = Integer.toBinaryString(MBTI);
-                                StringBuilder binary = new StringBuilder("0000");
-                                for(int indexMBTI = 0; indexMBTI<binaryMBTI.length(); indexMBTI++){
-                                    binary.replace(indexMBTI,indexMBTI+1,binaryMBTI.substring(indexMBTI,indexMBTI+1));
-                                }
+                                String binary = makeMBTIToBinary4Length(MBTI);
                                 if (binary.charAt(0) == '0') {
                                     countI++;
                                 }
@@ -549,11 +545,7 @@ public class PlaceService {
                             for (int i = 0; i < place.getPlaceRecommendList().size(); i++) {
                                 PlaceRecommend placeRecommend = place.getPlaceRecommendList().get(i);
                                 int MBTI = placeRecommend.getMember().getMbti();
-                                String binaryMBTI = Integer.toBinaryString(MBTI);
-                                StringBuilder binary = new StringBuilder("0000");
-                                for(int indexMBTI = 0; indexMBTI<binaryMBTI.length(); indexMBTI++){
-                                    binary.replace(indexMBTI,indexMBTI+1,binaryMBTI.substring(indexMBTI,indexMBTI+1));
-                                }
+                                String binary = makeMBTIToBinary4Length(MBTI);
                                 if (binary.charAt(0) == '0') {
                                     countI++;
                                 }
@@ -626,6 +618,20 @@ public class PlaceService {
             Place place = optionalPlace.orElseThrow();
             return place;
         }
+    }
+
+    private static String makeMBTIToBinary4Length(int MBTI){
+        String binaryMBTI = Integer.toBinaryString(MBTI);
+//        StringBuilder binary = new StringBuilder("0000");
+//        for(int indexMBTI = 0; indexMBTI<binaryMBTI.length(); indexMBTI++){
+//            binary.replace(indexMBTI,indexMBTI+1,binaryMBTI.substring(indexMBTI,indexMBTI+1));
+//        }
+//        return binary.toString();
+        StringBuilder binary = new StringBuilder(binaryMBTI);
+        while(binary.length()<4){
+            binary = new StringBuilder("0" + binary);
+        }
+        return binary.toString();
     }
 
     /*private static void removeElementFromListInArray(JsonNode jsonNode, String arrayFieldName, long placeId){
