@@ -86,18 +86,27 @@ public class MyCourseController {
     public ResponseEntity getCourses(@PathVariable("mbti-num") int mbti,
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam String sorting){
+                                     @RequestParam String sorting,
+                                     @Nullable @RequestHeader(value = "Authorization") String token){
+
         Slice<MyCourse> pageMyCourses = null;
         if(mbti==17){
             pageMyCourses = myCourseService.findAllCourses(sorting,page-1,size);
         }else {
             pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
         }
-
         List<MyCourse> courses = pageMyCourses.getContent();
-        List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
-        courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse)));
-        return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
+        if(token == null) {
+            List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
+            courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse)));
+            return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
+        }
+        else{
+            Member member = tokenDecryption.getWriterInJWTToken(token);
+            List<MyCourseDto.ResponseDetailPlaceWithLiked> responses = new ArrayList<>();
+            courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse,member)));
+            return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/myCourse")
@@ -109,8 +118,8 @@ public class MyCourseController {
         Slice<MyCourse> pageMyCourses = myCourseService.findMyCourses(member,page-1,size);
 
         List<MyCourse> courses = pageMyCourses.getContent();
-        List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
-        courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse)));
+        List<MyCourseDto.ResponseDetailPlaceWithLiked> responses = new ArrayList<>();
+        courses.forEach(myCourse -> responses.add(mapper.courseToCourseResponseDtoDetailPlace(myCourse,member)));
         return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
     }
 
