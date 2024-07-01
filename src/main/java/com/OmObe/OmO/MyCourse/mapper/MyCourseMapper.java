@@ -2,6 +2,7 @@ package com.OmObe.OmO.MyCourse.mapper;
 
 import com.OmObe.OmO.MyCourse.dto.MyCourseDto;
 import com.OmObe.OmO.MyCourse.entity.MyCourse;
+import com.OmObe.OmO.MyCourse.entity.MyCourseLike;
 import com.OmObe.OmO.Place.service.PlaceService;
 import com.OmObe.OmO.member.entity.Member;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -110,6 +111,30 @@ public class MyCourseMapper {
             Integer likeCount = course.getLikeCount();
 
             MyCourseDto.ResponseDetailPlace response = new MyCourseDto.ResponseDetailPlace(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName);
+            return response;
+        }
+    }
+
+    public MyCourseDto.ResponseDetailPlaceWithLiked courseToCourseResponseDtoDetailPlace(MyCourse course,Member member){
+        if(course == null){
+            return null;
+        } else {
+            Long courseId = course.getCourseId();
+            String courseName = course.getCourseName();
+            List<MyCourseDto.ResponseSmallDetailPlace> contents = new ArrayList<>();
+            getNextCoursesMoreDetail(contents,course,course.getMember());
+            Collections.reverse(contents);
+            LocalDateTime createdAt = course.getCreatedAt();
+            LocalDateTime modifiedAt = course.getModifiedAt();
+            String writerName = course.getMember().getNickname();
+            Integer likeCount = course.getLikeCount();
+
+            MyCourseLike temp = new MyCourseLike();
+            temp.setMyCourse(course);
+            temp.setMember(member);
+            Boolean myLiked = course.getMyCourseLikeList().contains(temp);
+
+            MyCourseDto.ResponseDetailPlaceWithLiked response = new MyCourseDto.ResponseDetailPlaceWithLiked(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName,myLiked);
             return response;
         }
     }
