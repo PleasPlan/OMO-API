@@ -31,6 +31,9 @@ dependencies {
 	// spring actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+	// prometheus
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	// jsr305 - for NPE caused by @Nullable Annotation
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
