@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -84,32 +85,38 @@ public class MyCourseController {
     * */
 
     @GetMapping("/mbti")
-    public ResponseEntity getCourses(@RequestParam("IE") String IorE,
-                                     @RequestParam("PJ") String PorJ,
+    public ResponseEntity getCourses(@RequestParam String IorE,
+                                     @RequestParam String PorJ,
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting,
                                      @Nullable @RequestHeader(value = "Authorization") String token){
         Boolean IE = null;
         Boolean PJ = null;
-        if(IorE == "I"){
-            IE = false;
+        switch (IorE) {
+            case "I":
+                IE = false;
+                break;
+            case "E":
+                IE = true;
+                break;
+            default:
+                log.info("IorE null");
+                break;
         }
-        else if(IorE == "E"){
-            IE = true;
+        switch (PorJ) {
+            case "P":
+                PJ = false;
+                break;
+            case "J":
+                PJ = true;
+                break;
+            default:
+                log.info("PorJ null");
+                break;
         }
-        if(PorJ == "P"){
-            PJ = false;
-        }
-        else if (PorJ == "J") {
-            PJ = true;
-        }
-        Slice<MyCourse> pageMyCourses = null;
-        if(IE == null && PJ == null){
-            pageMyCourses = myCourseService.findAllCourses(sorting,page-1,size);
-        }else {
-            pageMyCourses = myCourseService.findCoursesWithFilter(sorting, IE, PJ, page - 1, size);
-        }
+        Slice<MyCourse> pageMyCourses = myCourseService.findCoursesWithFilter(sorting, IE, PJ, page - 1, size);
+
         List<MyCourse> courses = pageMyCourses.getContent();
         if(token == null) {
             List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
