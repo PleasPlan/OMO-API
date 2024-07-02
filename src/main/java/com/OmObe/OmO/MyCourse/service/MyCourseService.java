@@ -118,7 +118,7 @@ public class MyCourseService {
                         Sort.by("createdAt").descending()))));
     }
 
-    public Slice<MyCourse> findCoursesWithFilter(String sortBy,boolean IE, boolean PJ, int page, int size){
+    public Slice<MyCourse> findCoursesWithFilter(String sortBy,Boolean IE, Boolean PJ, int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMemberMBTIFilter(IE,PJ), PageRequest.of(page,size,
                 Sort.by(sortBy).descending().and(
                         Sort.by("createdAt").descending()))));
