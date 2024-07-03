@@ -78,7 +78,7 @@ public class PlaceController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/recent")
+    @PostMapping("/recent")
     public ResponseEntity getRecentPlace(@RequestBody PlaceRecent.Request request,
                                          @Nullable @RequestHeader("Authorization") String token){
 
