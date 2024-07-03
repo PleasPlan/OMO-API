@@ -12,11 +12,15 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static antlr.build.ANTLR.root;
 
 @Service
 @Slf4j
@@ -114,6 +118,12 @@ public class MyCourseService {
                         Sort.by("createdAt").descending()))));
     }
 
+    public Slice<MyCourse> findCoursesWithFilter(String sortBy,Boolean IE, Boolean PJ, int page, int size){
+        return convertToSlice(myCourseRepository.findAll(withMemberMBTIFilter(IE,PJ), PageRequest.of(page,size,
+                Sort.by(sortBy).descending().and(
+                        Sort.by("createdAt").descending()))));
+    }
+
     public Slice<MyCourse> findMyCourses(Member member,int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMember(member), PageRequest.of(page,size,
                 Sort.by("modifiedAt").descending())));
@@ -160,6 +170,35 @@ public class MyCourseService {
         );
     }
 
+    // IE 조건 : true = E일 때, false = I일 때, null = 검색 조건 없을 때
+    // PJ 조건 : true = J일 때, false = P일 때, null = 검색 조건 없을 때
+    public static Specification<MyCourse> withMemberMBTIFilter(Boolean IE, Boolean PJ) {
+        return (Specification<MyCourse>) (root, query, builder) -> {
+            Predicate predicate = builder.isNotNull(root.get("courseName"));
+
+            if (IE != null) {
+                Predicate iePredicate = IE ?
+                        builder.greaterThanOrEqualTo(root.get("member").get("mbti"), 8) :
+                        builder.lessThan(root.get("member").get("mbti"), 8);
+                predicate = builder.and(predicate, iePredicate);
+            }
+
+            if (PJ != null) {
+                Expression<Integer> mbtiValue = root.get("member").get("mbti");
+                Expression<Integer> mod8 = builder.mod(mbtiValue, 8);
+                Expression<Integer> mod4 = builder.mod(mod8, 4);
+                Expression<Integer> mod2 = builder.mod(mod4, 2);
+                Predicate pjPredicate = PJ ?
+                        builder.greaterThan(mod2, 0) :
+                        builder.equal(mod2, 0);
+                predicate = builder.and(predicate, pjPredicate);
+            }
+
+            return predicate;
+        };
+    }
+
+
     public static Specification<MyCourse> withMember(Member member){
         return (Specification<MyCourse>) ((root, query, builder) ->
                 builder.and(
@@ -191,5 +230,24 @@ public class MyCourseService {
             myCourseLikeRepository.delete(optionalMyCourseLike.get());
             return "deleted!";
         }
+    }
+
+    public static boolean filteringIE(int mbti){
+        boolean IE = false;
+
+        if((mbti / 8) >0)   // 만약 0이면 I, 1이면 E
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    public static boolean filteringPJ(int mbti){
+        boolean PJ = false;
+
+        if((((mbti % 8) % 4) % 2) > 0){
+            return true;
+        }
+        else return false;
     }
 }

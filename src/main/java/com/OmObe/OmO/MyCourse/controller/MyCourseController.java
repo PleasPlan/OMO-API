@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -82,19 +83,40 @@ public class MyCourseController {
     * 2. viewCount : 조회수 순
     * 3. likeCount : 좋아요 순
     * */
-    @GetMapping("/mbti/{mbti-num}")
-    public ResponseEntity getCourses(@PathVariable("mbti-num") int mbti,
+
+    @GetMapping("/mbti")
+    public ResponseEntity getCourses(@RequestParam String IorE,
+                                     @RequestParam String PorJ,
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting,
                                      @Nullable @RequestHeader(value = "Authorization") String token){
-
-        Slice<MyCourse> pageMyCourses = null;
-        if(mbti==17){
-            pageMyCourses = myCourseService.findAllCourses(sorting,page-1,size);
-        }else {
-            pageMyCourses = myCourseService.findCourses(sorting, mbti, page - 1, size);
+        Boolean IE = null;
+        Boolean PJ = null;
+        switch (IorE) {
+            case "I":
+                IE = false;
+                break;
+            case "E":
+                IE = true;
+                break;
+            default:
+                log.info("IorE null");
+                break;
         }
+        switch (PorJ) {
+            case "P":
+                PJ = false;
+                break;
+            case "J":
+                PJ = true;
+                break;
+            default:
+                log.info("PorJ null");
+                break;
+        }
+        Slice<MyCourse> pageMyCourses = myCourseService.findCoursesWithFilter(sorting, IE, PJ, page - 1, size);
+
         List<MyCourse> courses = pageMyCourses.getContent();
         if(token == null) {
             List<MyCourseDto.ResponseDetailPlace> responses = new ArrayList<>();
