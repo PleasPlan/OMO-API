@@ -40,7 +40,7 @@ public class MemberDto {
         private int birthDay; // 생년월일 - 일
 
         @NotNull(message = "mbti 유형을 입력하세요.")
-        @Max(16)
+        @Max(15)
         @Min(-1)
         private int mbti; // mbti 유형
 
@@ -78,7 +78,7 @@ public class MemberDto {
     @Getter
     @Setter
     public static class MbtiPatch{
-        @Max(16)
+        @Max(15)
         @Min(-1)
         private int mbti;
     }
