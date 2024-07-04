@@ -72,7 +72,8 @@ public class MyCourseController {
     public ResponseEntity getCourse(@RequestHeader("Authorization") String token,
                                     @PathVariable("course-id") long startId){
         MyCourse myCourse = myCourseService.getCourse(startId);
-        MyCourseDto.ResponseDetailPlace response = mapper.courseToCourseResponseDtoDetailPlace(myCourse);
+        Member member = tokenDecryption.getWriterInJWTToken(token);
+        MyCourseDto.ResponseDetailPlaceWithLiked response = mapper.courseToCourseResponseDtoDetailPlace(myCourse,member);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
