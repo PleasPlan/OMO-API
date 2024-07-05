@@ -74,7 +74,7 @@ public class MyCourseController {
         Member member = tokenDecryption.getWriterInJWTToken(token);
         MyCourse myCourse = myCourseService.shareCourse(courseId,member);
         MyCourseDto.ResponseDetailPlaceWithLiked response = mapper.courseToCourseResponseDtoDetailPlace(myCourse,member);
-        return null;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/{course-id}")
     public ResponseEntity getCourse(@RequestHeader("Authorization") String token,
