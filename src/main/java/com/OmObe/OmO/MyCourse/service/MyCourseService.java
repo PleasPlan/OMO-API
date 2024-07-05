@@ -112,6 +112,12 @@ public class MyCourseService {
         return myCourseRepository.save(start);
     }
 
+    public MyCourse shareCourse(long courseId){
+        MyCourse myCourse = findCourse(courseId);
+        myCourse.setShare(!myCourse.getShare());
+        return myCourseRepository.save(myCourse);
+    }
+
     public Slice<MyCourse> findCourses(String sortBy,int mbti,int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMemberMBTI(mbti), PageRequest.of(page,size,
                 Sort.by(sortBy).descending().and(
