@@ -72,7 +72,7 @@ public class MyCourseController {
     public ResponseEntity shareCourse(@PathVariable("course-id") long courseId,
                                       @RequestHeader("Authorization") String token){
         Member member = tokenDecryption.getWriterInJWTToken(token);
-        MyCourse myCourse = myCourseService.shareCourse(courseId);
+        MyCourse myCourse = myCourseService.shareCourse(courseId,member);
         MyCourseDto.ResponseDetailPlaceWithLiked response = mapper.courseToCourseResponseDtoDetailPlace(myCourse,member);
         return null;
     }
