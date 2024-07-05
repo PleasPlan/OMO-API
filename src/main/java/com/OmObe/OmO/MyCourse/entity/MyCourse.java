@@ -42,6 +42,9 @@ public class MyCourse {
     @Column(nullable = false)
     private Integer viewCount = 0;
 
+    @Column(nullable = false)
+    private Boolean share = false;
+
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "NEXT_COURSE")
     private MyCourse nextCourse;
