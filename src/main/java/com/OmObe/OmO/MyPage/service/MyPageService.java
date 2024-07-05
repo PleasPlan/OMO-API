@@ -40,6 +40,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -425,7 +426,7 @@ public class MyPageService {
 
         // 나의 코스 개수 계산
         List<MyCourse> myCourses = findMember.getMyCourses();
-        int myCourseCount = myCourses.size();
+        int myCourseCount = myCourseCount(myCourses);
 
         // 5. MyInfoResponse에 회원 정보 저장
         info.setProfileImageUrl(findMember.getProfileImageUrl());
@@ -439,5 +440,13 @@ public class MyPageService {
         info.setMyCourseCount(myCourseCount);
 
         return info;
+    }
+
+    // courseName이 null값으로 되어 있는 코스를 제거해서 제대로 된 수를 계산해주는 기능
+    private static int myCourseCount(List<MyCourse> myCourses){
+        List<MyCourse> filteredMyCourses = myCourses.stream()
+                .filter(course -> course.getCourseName().isEmpty())
+                .collect(Collectors.toList());
+        return myCourses.size()-filteredMyCourses.size();
     }
 }
