@@ -112,6 +112,16 @@ public class MyCourseService {
         return myCourseRepository.save(start);
     }
 
+    public MyCourse shareCourse(long courseId,Member member){
+        MyCourse myCourse = findCourse(courseId);
+        if(myCourse.getMember() == member) {
+            myCourse.setShare(!myCourse.getShare());
+            return myCourseRepository.save(myCourse);
+        }else{
+            return null;
+        }
+    }
+
     public Slice<MyCourse> findCourses(String sortBy,int mbti,int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMemberMBTI(mbti), PageRequest.of(page,size,
                 Sort.by(sortBy).descending().and(
@@ -175,6 +185,7 @@ public class MyCourseService {
     public static Specification<MyCourse> withMemberMBTIFilter(Boolean IE, Boolean PJ) {
         return (Specification<MyCourse>) (root, query, builder) -> {
             Predicate predicate = builder.isNotNull(root.get("courseName"));
+            predicate = builder.and(predicate,builder.isTrue(root.get("share")));
 
             if (IE != null) {
                 Predicate iePredicate = IE ?

@@ -65,6 +65,7 @@ public class MyCourseDto {
         private Integer likeCount;
         private String writerName;
         private Boolean myLiked;
+        private Boolean share;
     }
 
 

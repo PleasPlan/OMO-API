@@ -68,6 +68,14 @@ public class MyCourseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/share/{course-id}")
+    public ResponseEntity shareCourse(@PathVariable("course-id") long courseId,
+                                      @RequestHeader("Authorization") String token){
+        Member member = tokenDecryption.getWriterInJWTToken(token);
+        MyCourse myCourse = myCourseService.shareCourse(courseId,member);
+        MyCourseDto.ResponseDetailPlaceWithLiked response = mapper.courseToCourseResponseDtoDetailPlace(myCourse,member);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/{course-id}")
     public ResponseEntity getCourse(@RequestHeader("Authorization") String token,
                                     @PathVariable("course-id") long startId){
