@@ -185,6 +185,7 @@ public class MyCourseService {
     public static Specification<MyCourse> withMemberMBTIFilter(Boolean IE, Boolean PJ) {
         return (Specification<MyCourse>) (root, query, builder) -> {
             Predicate predicate = builder.isNotNull(root.get("courseName"));
+            predicate = builder.and(predicate,builder.isTrue(root.get("share")));
 
             if (IE != null) {
                 Predicate iePredicate = IE ?
