@@ -112,10 +112,14 @@ public class MyCourseService {
         return myCourseRepository.save(start);
     }
 
-    public MyCourse shareCourse(long courseId){
+    public MyCourse shareCourse(long courseId,Member member){
         MyCourse myCourse = findCourse(courseId);
-        myCourse.setShare(!myCourse.getShare());
-        return myCourseRepository.save(myCourse);
+        if(myCourse.getMember() == member) {
+            myCourse.setShare(!myCourse.getShare());
+            return myCourseRepository.save(myCourse);
+        }else{
+            return null;
+        }
     }
 
     public Slice<MyCourse> findCourses(String sortBy,int mbti,int page, int size){
