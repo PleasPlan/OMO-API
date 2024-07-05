@@ -68,6 +68,10 @@ public class MyCourseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/share/{course-id}")
+    public ResponseEntity shareCourse(@PathVariable("course-id") long courseId){
+        return null;
+    }
     @GetMapping("/{course-id}")
     public ResponseEntity getCourse(@RequestHeader("Authorization") String token,
                                     @PathVariable("course-id") long startId){
