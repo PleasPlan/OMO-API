@@ -445,7 +445,7 @@ public class MyPageService {
     // courseName이 null값으로 되어 있는 코스를 제거해서 제대로 된 수를 계산해주는 기능
     private static int myCourseCount(List<MyCourse> myCourses){
         List<MyCourse> filteredMyCourses = myCourses.stream()
-                .filter(course -> course.getCourseName().isEmpty())
+                .filter(course -> Objects.isNull(course.getCourseName()))
                 .collect(Collectors.toList());
         return myCourses.size()-filteredMyCourses.size();
     }
