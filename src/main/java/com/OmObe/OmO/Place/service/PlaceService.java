@@ -97,12 +97,20 @@ public class PlaceService {
 
     public String getRecentPlace(List<String> placeNameList, List<Long> placeIdList, Member member){
         StringBuilder allResponse = new StringBuilder();
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
         for(int index = 0; index<placeIdList.size(); index++){
             allResponse.append(getPlace(placeNameList.get(index),placeIdList.get(index),member));
             allResponse.append(",");
+            try {
+                arrayNode.add(mapper.readTree(getPlace(placeNameList.get(index),placeIdList.get(index),member)));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         allResponse.deleteCharAt(allResponse.length()-1);
-        return allResponse.toString();
+//        return allResponse.toString();
+        return arrayNode.toString();
     }
 
     public String getPlace(String placeName,long placeId,Member member) {
