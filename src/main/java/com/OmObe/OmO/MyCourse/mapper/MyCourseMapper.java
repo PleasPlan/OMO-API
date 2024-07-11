@@ -130,13 +130,14 @@ public class MyCourseMapper {
             Collections.reverse(contents);
             LocalDateTime createdAt = course.getCreatedAt();
             LocalDateTime modifiedAt = course.getModifiedAt();
+            LocalDateTime sharedAt = course.getSharedAt();
             String writerName = course.getMember().getNickname();
             Integer likeCount = course.getLikeCount();
 
             Optional<MyCourseLike> myLiked = myCourseLikeRepository.findByMemberAndMyCourse(member,course);
 
             Boolean shared = course.getShare();
-            MyCourseDto.ResponseDetailPlaceWithLiked response = new MyCourseDto.ResponseDetailPlaceWithLiked(courseId,courseName,contents,createdAt,modifiedAt,likeCount,writerName,myLiked.isPresent(),shared);
+            MyCourseDto.ResponseDetailPlaceWithLiked response = new MyCourseDto.ResponseDetailPlaceWithLiked(courseId,courseName,contents,createdAt,modifiedAt,sharedAt,likeCount,writerName,myLiked.isPresent(),shared);
             return response;
         }
     }
