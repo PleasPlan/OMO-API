@@ -115,7 +115,12 @@ public class MyCourseService {
     public MyCourse shareCourse(long courseId,Member member){
         MyCourse myCourse = findCourse(courseId);
         if(myCourse.getMember() == member) {
-            myCourse.setShare(!myCourse.getShare());
+            if(myCourse.getShare() == false){
+                myCourse.setShare(true);
+                myCourse.setSharedAt(LocalDateTime.now());
+            }else {
+                myCourse.setShare(false);
+            }
             return myCourseRepository.save(myCourse);
         }else{
             return null;
@@ -131,7 +136,7 @@ public class MyCourseService {
     public Slice<MyCourse> findCoursesWithFilter(String sortBy,Boolean IE, Boolean PJ, int page, int size){
         return convertToSlice(myCourseRepository.findAll(withMemberMBTIFilter(IE,PJ), PageRequest.of(page,size,
                 Sort.by(sortBy).descending().and(
-                        Sort.by("createdAt").descending()))));
+                        Sort.by("sharedAt").descending()))));
     }
 
     public Slice<MyCourse> findMyCourses(Member member,int page, int size){

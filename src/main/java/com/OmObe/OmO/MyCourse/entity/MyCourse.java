@@ -40,6 +40,9 @@ public class MyCourse {
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Column(nullable = false)
+    private LocalDateTime sharedAt = LocalDateTime.now();
+
+    @Column(nullable = false)
     private Integer viewCount = 0;
 
     @Column(nullable = false)
