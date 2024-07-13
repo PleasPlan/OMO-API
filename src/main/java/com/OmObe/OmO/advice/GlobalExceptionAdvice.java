@@ -57,11 +57,4 @@ public class GlobalExceptionAdvice {
 //
 //        return response;
 //    }
-
-    @ExceptionHandler
-    public ErrorResponse handleException(Exception e) { // 구현 상의 오류로 인해 발생하는 예외 처리
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return response;
-    }
 }
