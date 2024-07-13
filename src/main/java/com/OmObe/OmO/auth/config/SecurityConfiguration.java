@@ -70,10 +70,10 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.PATCH, "/notice/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/notice/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.POST, "/h2/**").permitAll() // todo: 테스트용 db 조회 -> 관리자 권한만 접근하도록 수정할 것
-                        .antMatchers(HttpMethod.GET, "/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/signup").permitAll()
                         .antMatchers(HttpMethod.GET, "/board/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/checkNickname").permitAll()
+                        .antMatchers(HttpMethod.GET, "/**").permitAll()
                         .anyRequest().authenticated()
                 ).oauth2Login(oauth2 -> oauth2 // oauth2 인증 활성화
                         .successHandler(new OAuth2MemberSuccessHandler(tokenService, oAuth2MemberService, authorityUtils, redisService,jwtTokenizer)));
