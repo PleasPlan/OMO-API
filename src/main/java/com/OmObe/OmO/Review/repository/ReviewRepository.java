@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review>{
     Optional<List<Review>> findByPlaceId(long placeId);
+    Optional<Review> findByMemberAndPlaceId(long memberId, long placeId);
 }
