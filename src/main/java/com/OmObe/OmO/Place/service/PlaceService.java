@@ -346,13 +346,15 @@ public class PlaceService {
                     place.deleteRecommends(existPlaceRecommend);
                     member.deletePlaceRecommend(existPlaceRecommend);
                     placeRecommendRepository.delete(existPlaceRecommend);
-                } else {
+                } else if(reviewRepository.findByMemberAndPlaceId(member,place.getPlaceId()).isPresent()){
                     PlaceRecommend recommend = new PlaceRecommend();
                     recommend.setPlace(place);
                     recommend.setMember(member);
                     place.addRecommends(recommend);
                     member.addPlaceRecommend(recommend);
                     placeRecommendRepository.save(recommend);
+                } else {
+                    return "No review. Write review first before recommend.";
                 }
             }
             placeRepository.save(place);
