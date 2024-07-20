@@ -124,7 +124,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<MyCourseLike> myCourseLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
