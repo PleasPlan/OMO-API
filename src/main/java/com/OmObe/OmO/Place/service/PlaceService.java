@@ -347,6 +347,8 @@ public class PlaceService {
                     member.deletePlaceRecommend(existPlaceRecommend);
                     placeRecommendRepository.delete(existPlaceRecommend);
                 } else if(reviewRepository.findByMemberAndPlaceId(member,place.getPlaceId()).isPresent()){
+                    Review optionalReview = reviewRepository.findByMemberAndPlaceId(member,place.getPlaceId()).get();
+                    log.warn("place ID : " + optionalReview.getPlaceId());
                     PlaceRecommend recommend = new PlaceRecommend();
                     recommend.setPlace(place);
                     recommend.setMember(member);
@@ -369,11 +371,16 @@ public class PlaceService {
                 placeLikeRepository.save(like);
             }
             else{
-                PlaceRecommend recommend = new PlaceRecommend();
-                recommend.setPlace(place);
-                recommend.setMember(member);
-                newPlace.addRecommends(recommend);
-                placeRecommendRepository.save(recommend);
+                if(reviewRepository.findByMemberAndPlaceId(member,placeId).isPresent()) {
+                    PlaceRecommend recommend = new PlaceRecommend();
+                    recommend.setPlace(place);
+                    recommend.setMember(member);
+                    newPlace.addRecommends(recommend);
+                    placeRecommendRepository.save(recommend);
+                }
+                else{
+                    return "No review. Write review first before recommend.";
+                }
             }
             placeRepository.save(newPlace);
             return "{\"placeId\":"+newPlace.getPlaceId()+",\"mine\":"+newPlace.getPlaceLikeList().size()+",\"recommend\":"+newPlace.getPlaceRecommendList().size()+"}";
