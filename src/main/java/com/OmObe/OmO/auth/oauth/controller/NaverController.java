@@ -46,10 +46,10 @@ public class NaverController {
     public ResponseEntity naverCallback(@RequestParam("code") String code,
                                         @RequestParam("state") String state,
                                         HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        OAuthToken oAuthToken = naverOAuthService.tokenRequest(code); // 토큰 획득
+        OAuthToken oAuthToken = naverOAuthService.tokenRequest(code).block(); // 토큰 획득
         log.info("code : {}", code);
 
-        NaverProfile naverProfile = naverOAuthService.userInfoRequest(oAuthToken); // 사용자 정보 획득
+        NaverProfile naverProfile = naverOAuthService.userInfoRequest(oAuthToken).block(); // 사용자 정보 획득
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("id", naverProfile.getResponse().getId());

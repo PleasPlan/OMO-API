@@ -62,7 +62,7 @@ public class KakaoOAuthService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", clientId);
         body.add("client_secret", clientSecret);
-        body.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+        body.add("redirect_uri", "https://api.oneulmohae.co.kr/auth/kakao/callback");
         body.add("code", code);
 
         return body;
