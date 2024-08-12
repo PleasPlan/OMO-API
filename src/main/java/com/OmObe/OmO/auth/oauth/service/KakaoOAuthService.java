@@ -33,8 +33,6 @@ public class KakaoOAuthService {
 
     // 카카오 api 통해 액세스 토큰 요청
     public Mono<OAuthToken> tokenRequest(String code) {
-        log.info("clientId : {}", clientId);
-
         // kakao api 엔드포인트를 통해 액세스 토큰 요청을 보내고 응답을 받음
         return webClient.post()
                 .uri("https://kauth.kakao.com/oauth/token")
@@ -46,7 +44,6 @@ public class KakaoOAuthService {
 
     // kakao api로 사용자의 정보 요청
     public Mono<KakaoProfile> userInfoRequest(OAuthToken oAuthToken) {
-
         // kakao api 엔드포인트를 통해 액세스 토큰 요청을 보내고 응답을 받음
         return webClient.post()
                 .uri("https://kapi.kakao.com/v2/user/me")

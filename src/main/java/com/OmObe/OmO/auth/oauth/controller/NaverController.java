@@ -46,8 +46,13 @@ public class NaverController {
     public ResponseEntity naverCallback(@RequestParam("code") String code,
                                         @RequestParam("state") String state,
                                         HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+       /*
+        block()을 사용하면 OAuth 인증 로직에 사용된 WebClient의 non-blocking 이점을 얻기 어렵지만, 사용자 인증로직(OAuth2MemberSuccessHandler, OAuth2AuhenticationToken)이
+        정상적으로 동작하는지 안정성 검증이 되지 않았고, WebClient의 이점을 모두 살리려면 나머지 로직의 수정이 필요할 수 있음.
+        oauth 토큰 획득과 토큰을 통한 사용자 정보 획득을 block() 처리하여 기존 RestTemplate을 사용했을 때의 로직 처리 흐름을 그대로 가져감.
+        단순히 deprecated된 RestTemplate을 대체하기 위한 목적으로 WebClient를 적용.
+        */
         OAuthToken oAuthToken = naverOAuthService.tokenRequest(code).block(); // 토큰 획득
-        log.info("code : {}", code);
 
         NaverProfile naverProfile = naverOAuthService.userInfoRequest(oAuthToken).block(); // 사용자 정보 획득
 
