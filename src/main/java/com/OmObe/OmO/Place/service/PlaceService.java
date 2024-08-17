@@ -436,6 +436,7 @@ public class PlaceService {
         }
     }
 
+    // 카테고리 별 장소를 찾을 때 사용
     private String idTracker(String jsonData,Member member) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -651,18 +652,183 @@ public class PlaceService {
         return binary.toString();
     }
 
-    /*private static void removeElementFromListInArray(JsonNode jsonNode, String arrayFieldName, long placeId){
-        if(jsonNode.isObject() && jsonNode.has(arrayFieldName)){
-            ArrayNode arrayNode = (ArrayNode) jsonNode.get(arrayFieldName);
-            Iterator<JsonNode> elements = arrayNode.elements();
+    private String deleteNonCategory(String jsonData, String category) {
+        String categoryName = null;
+        switch (category) {
+            // 놀거리
+            case "테마파크":
+            {
+                categoryName = "여행 > 관광,명소 > 테마파크";
+                break;
+            }
+            case "축제":
+            {
+                categoryName = "여행 > 축제";
+                break;
+            }
+            case "오락실":
+            {
+                categoryName = "가정,생활 > 여가시설 > 오락실";
+                break;
+            }
+            case "팝업스토어": {
+                // 그냥 이름으로만 찾아도 될 듯
+                break;
+            }
+            case "레저": {
+                categoryName = "스포츠,레저";
+                break;
+            }
+            case "쇼핑몰": {
+                // 뭐든 팔면 정녕 쇼핑몰이라고 할 수 있는가
+                break;
+            }
 
-            while (elements.hasNext()){
-                JsonNode element = elements.next();
-                if(element.get("id").asLong() != placeId){
-                    elements.remove();
-                    break;
-                }
+            // 먹거리
+            case "한식": {
+                categoryName = "음식점 > 한식";
+                break;
+            }
+            case "중식": {
+                categoryName = "음식점 > 중식";
+                break;
+            }
+            case "일식": {
+                categoryName = "음식점 > 일식";
             }
         }
-    }*/
+
+
+
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            JsonNode jsonNode = objectMapper.readTree(jsonData);
+
+            ArrayNode placesNode = jsonNode.get("documents").deepCopy();
+
+            for(int index = 0; index<placesNode.size(); index++){
+                ObjectNode objectNode = (ObjectNode) placesNode.get(index);
+//                long id = placesNode.get(index).get("id").asLong();
+//                if(placeId == id) {
+//                    Place place = findPlace(id);
+//                    boolean mine = false;
+//                    boolean recommend = false;
+//                    if(place != null) {
+//                        List<PlaceLike> placeLikes = place.getPlaceLikeList();
+//                        List<PlaceRecommend> placeRecommends = place.getPlaceRecommendList();
+//                        if (!placeLikes.isEmpty()) {
+//                            for (PlaceLike placeLike : placeLikes) {
+//                                if (placeLike.getMember() == member) {
+//                                    mine = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        if (!placeRecommends.isEmpty()) {
+//                            for (PlaceRecommend placeRecommend : placeRecommends) {
+//                                if (placeRecommend.getMember() == member) {
+//                                    recommend = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//
+//                        /*
+//                         * ISTP = 0   || 0000
+//                         * ISTJ = 1   || 0001
+//                         * ISFP = 2   || 0010
+//                         * ISFJ = 3   || 0011
+//                         * INTP = 4   || 0100
+//                         * INTJ = 5   || 0101
+//                         * INFP = 6   || 0110
+//                         * INFJ = 7   || 0111
+//                         * ESTP = 8   || 1000
+//                         * ESTJ = 9   || 1001
+//                         * ESFP = 10  || 1010
+//                         * ESFJ = 11  || 1011
+//                         * ENTP = 12  || 1100
+//                         * ENTJ = 13  || 1101
+//                         * ENFP = 14  || 1110
+//                         * ENFJ = 15  || 1111
+//                         * */
+//                        if(!place.getPlaceRecommendList().isEmpty()) {
+//                            int countI = 0;
+//                            int countS = 0;
+//                            int countT = 0;
+//                            int countP = 0;
+//                            for (int i = 0; i < place.getPlaceRecommendList().size(); i++) {
+//                                PlaceRecommend placeRecommend = place.getPlaceRecommendList().get(i);
+//                                int MBTI = placeRecommend.getMember().getMbti();
+//                                String binary = makeMBTIToBinary4Length(MBTI);
+//                                if (binary.charAt(0) == '0') {
+//                                    countI++;
+//                                }
+//                                if (binary.charAt(1) == '0') {
+//                                    countS++;
+//                                }
+//                                if (binary.charAt(2) == '0') {
+//                                    countT++;
+//                                }
+//                                if (binary.charAt(3) == '0') {
+//                                    countP++;
+//                                }
+//                            }
+//                            float ratioI = (float) Math.round((float) countI / place.getPlaceRecommendList().size() * 1000) / 1000;
+//                            float ratioS = (float) Math.round((float) countS / place.getPlaceRecommendList().size() * 1000) / 1000;
+//                            float ratioT = (float) Math.round((float) countT / place.getPlaceRecommendList().size() * 1000) / 1000;
+//                            float ratioP = (float) Math.round((float) countP / place.getPlaceRecommendList().size() * 1000) / 1000;
+//
+//                            objectNode.put("ratioI", ratioI);
+//                            objectNode.put("ratioS", ratioS);
+//                            objectNode.put("ratioT", ratioT);
+//                            objectNode.put("ratioP", ratioP);
+//                        }
+//
+//                        objectNode.put("mine", place.getPlaceLikeList().size());
+//                        objectNode.put("recommend", place.getPlaceRecommendList().size());
+//                    }   else {
+//                        objectNode.put("mine", 0);
+//                        objectNode.put("recommend", 0);
+//                    }
+//                    objectNode.put("myMine", mine);
+//                    objectNode.put("myRecommend", recommend);
+//
+//                    ArrayNode reviews = JsonNodeFactory.instance.arrayNode();
+//                    Optional<List<Review>> optionalReviewList = reviewRepository.findByPlaceId(placeId);
+//                    if (optionalReviewList.isPresent()) {
+//                        List<Review> reviewList = optionalReviewList.get();
+//                        for (Review review : reviewList) {
+//                            ObjectNode reviewNode = objectMapper.createObjectNode();
+//                            reviewNode.put("writer", review.getMember().getNickname());
+//                            reviewNode.put("content", review.getContent());
+//                            reviewNode.put("imageName",review.getImageName());
+//                            reviews.add(reviewNode);
+//                        }
+//                    }
+//                    objectNode.set("reviews", reviews);
+                    JsonNode changedNode = objectNode;
+                    placesNode.set(index,changedNode);
+                }
+                else{
+                    NullNode nullNode = NullNode.instance;
+                    placesNode.set(index,nullNode);
+                }
+            }
+
+            Iterator<JsonNode> iterator = placesNode.iterator();
+            while (iterator.hasNext()){
+                if(iterator.next().isNull()){
+                    iterator.remove();
+                }
+            }
+
+            JsonNode resultNode = placesNode.get(0);
+            return objectMapper.writeValueAsString(resultNode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
