@@ -69,5 +69,31 @@ public class ReviewReportService {
         return reviewReportRepository.save(reviewReport);
     }
 
+    /**
+     * <신고 내용 조회 - 관리자 전용>
+     * 1. 토큰 검증
+     * 2. 먼저 신고된 순으로 정렬(과거순)
+     */
+    public Page<ReviewReport> getReviewReports(int page, int size, String token) {
+        // 1. 토큰 검증
+        try {
+            /*
+            서버의 오류 등으로 인해 member 테이블에 데이터가 다시 들어가게 된 상황에서 기존 유효 기간이 남아있는
+            토큰으로 접근하면 다른 회원의 정보로 접근할 가능성이 있기 때문에 verifiedAuthenticatedMember를 통해
+            회원의 이메일을 검증하여 회원의 정보와 권한을 파악하여 서비스에 접근 허용 및 제한 한다.
+             */
+            Member member = tokenDecryption.getWriterInJWTToken(token);
+            memberService.verifiedAuthenticatedMember(member.getMemberId());
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
+        }
 
+        // 2. 먼저 신고된 순으로 정렬(과거순)
+        return reviewReportRepository.findAll(reportSortedBy(page, size));
+    }
+
+    // 신고 내용 목록을 과거순으로 조회
+    private Pageable reportSortedBy(int page, int size) {
+        return PageRequest.of(page - 1, size, Sort.by("reviewReportId").ascending());
+    }
 }
