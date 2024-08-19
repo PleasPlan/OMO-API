@@ -10,6 +10,7 @@ import com.OmObe.OmO.member.mapper.MemberMapper;
 import com.OmObe.OmO.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class MemberService {
     private final MemberMapper mapper;
     private final JwtTokenizer jwtTokenizer;
     private final RedisTemplate<String, String> redisTemplate;
+
+    @Value("${mail.address.admin}")
+    private String adminEmail;
 
     /**
      * <회원 가입>
@@ -205,7 +209,9 @@ public class MemberService {
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         // 토큰이 사용자의 토큰이 아니라면 예외 처리
-        if (!loginMember.getEmail().equals(member.getEmail())) {
+        if (loginMember.getEmail().equals(member.getEmail()) || loginMember.getEmail().equals(adminEmail)) {
+            return;
+        }else{
             log.info("!loginMember.getEmail().equals(member.getEmail");
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
