@@ -6,6 +6,7 @@ import com.OmObe.OmO.MyCourse.entity.MyCourseLike;
 import com.OmObe.OmO.MyCourse.entity.MyCourse;
 import com.OmObe.OmO.Place.entity.PlaceLike;
 import com.OmObe.OmO.Place.entity.PlaceRecommend;
+import com.OmObe.OmO.Review.entity.Review;
 import com.OmObe.OmO.notice.entity.Notice;
 import com.OmObe.OmO.report.boardreport.entity.BoardReport;
 import com.OmObe.OmO.report.commentreport.entity.CommentReport;
@@ -100,7 +101,7 @@ public class Member {
 
     // TODO : Merge후 주석 해제할 것.
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Liked> likedList = new ArrayList<>();
 
     // Member - Notice 일대다 매핑
@@ -129,6 +130,10 @@ public class Member {
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<MyCourse> myCourses = new ArrayList<>();
+
+    // Member - Review 일대다 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     public void addLikes(Liked liked){
         this.likedList.add(liked);
