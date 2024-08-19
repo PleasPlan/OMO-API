@@ -90,7 +90,7 @@ public class PlaceService {
             member = tokenDecryption.getWriterInJWTToken(token);
         }
 
-        responseBody = idTracker(responseBody,member);
+        responseBody = idTracker(responseBody,member,category);
 
         return responseBody;
     }
@@ -436,6 +436,90 @@ public class PlaceService {
         }
     }
 
+    // 카테고리 별 장소를 찾을 때 사용
+    private String idTracker(String jsonData,Member member,String category) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonData);
+
+            JsonNode placesNode = jsonNode.get("documents");
+
+            placesNode = deleteNonCategory((ArrayNode) placesNode,category);
+
+            if(placesNode.isArray()){
+                for(JsonNode placeNode : placesNode){
+                    long id = placeNode.get("id").asLong();
+
+                    log.info("id : "+id);
+
+                    //PairJ<Place, Boolean> place = findPlaceWithBoolean(id);
+                    Place place = findPlace(id);
+                    ObjectNode objectNode = (ObjectNode) placeNode;
+                    Optional<List<Review>> reviews = reviewRepository.findByPlaceId(id);
+                    if(place != null){
+                        objectNode.put("mine", place.getPlaceLikeList().size());
+                        objectNode.put("recommend", place.getPlaceRecommendList().size());
+                    } else {
+                        objectNode.put("mine",0);
+                        objectNode.put("recommend", 0);
+                    }
+                    // 멤버 존재 시
+                    if(member != null){
+                        boolean mine = false;
+                        boolean recommend = false;
+                        if(place != null) {
+                            List<PlaceLike> placeLikes = place.getPlaceLikeList();
+                            List<PlaceRecommend> placeRecommends = place.getPlaceRecommendList();
+                            if (!placeLikes.isEmpty()) {
+                                for (PlaceLike placeLike : placeLikes) {
+                                    if (placeLike.getMember() == member) {
+                                        mine = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!placeRecommends.isEmpty()) {
+                                for (PlaceRecommend placeRecommend : placeRecommends) {
+                                    if (placeRecommend.getMember() == member) {
+                                        recommend = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        objectNode.put("myMine", mine);
+                        objectNode.put("myRecommend", recommend);
+                    }
+
+                    boolean imageChecker = true;
+                    Collections.reverse(reviews.get());
+                    for(Review review: reviews.get()){
+                        if(review.getImageName() != null){
+                            if(imageChecker) {
+                                objectNode.put("firstImageName", review.getImageName());
+                                imageChecker = false;
+                            } else {
+                                objectNode.put("secondImageName", review.getImageName());
+                                break;
+                            }
+                        }
+                    }
+
+                    JsonNode changedNode = objectNode;
+                    placeNode = changedNode;
+                }
+            }
+            else {
+                log.warn("No 'places' array found in the JSON data.");
+            }
+
+            return objectMapper.writeValueAsString(jsonNode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private String idTracker(String jsonData,Member member) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -651,18 +735,145 @@ public class PlaceService {
         return binary.toString();
     }
 
-    /*private static void removeElementFromListInArray(JsonNode jsonNode, String arrayFieldName, long placeId){
-        if(jsonNode.isObject() && jsonNode.has(arrayFieldName)){
-            ArrayNode arrayNode = (ArrayNode) jsonNode.get(arrayFieldName);
-            Iterator<JsonNode> elements = arrayNode.elements();
+    private JsonNode deleteNonCategory(ArrayNode placesNode, String category) {
+        String categoryName = null;
+        switch (category) {
+            // 놀거리
+            case "테마파크": {
+                categoryName = "여행 > 관광,명소 > 테마파크";
+                break;
+            }
+            case "축제": {
+                categoryName = "여행 > 축제";
+                break;
+            }
+            case "오락실": {
+                categoryName = "가정,생활 > 여가시설 > 오락실";
+                break;
+            }
+            case "팝업스토어": {
+                // 그냥 이름으로만 찾아도 될 듯
+                break;
+            }
+            case "레저": {
+                categoryName = "스포츠,레저";
+                break;
+            }
+            case "쇼핑몰": {
+                // 뭐든 팔면 정녕 쇼핑몰이라고 할 수 있는가
+                break;
+            }
 
-            while (elements.hasNext()){
-                JsonNode element = elements.next();
-                if(element.get("id").asLong() != placeId){
-                    elements.remove();
-                    break;
-                }
+            // 먹거리
+            case "한식": {
+                categoryName = "음식점 > 한식";
+                break;
+            }
+            case "중식": {
+                categoryName = "음식점 > 중식";
+                break;
+            }
+            case "일식": {
+                categoryName = "음식점 > 일식";
+                break;
+            }
+            case "양식": {
+                categoryName = "음식점 > 양식";
+                break;
+            }
+            case "치킨": {
+                categoryName = "음식점 > 치킨";
+                break;
+            }
+            case "패스트푸드": {
+                categoryName = "음식점 > 패스트푸드";
+                break;
+            }
+
+            // 볼거리
+            case "영화관": {
+                categoryName = "문화,예술 > 영화,영상 > 영화관";
+                break;
+            }
+            case "박물관": {
+                categoryName = "문화,예술 > 문화시설 > 박물관";
+                break;
+            }
+            case "수족관": {
+                categoryName = "문화,예술 > 문화시설 > 아쿠아리움";
+                break;
+            }
+            case "전시관": {
+                categoryName = "문화,예술 > 문화시설 > 전시관";
+                break;
+            }
+            case "과학관": {
+                categoryName = "문화,예술 > 문화시설 > 과학관";
+                break;
+            }
+            case "미술관": {
+                categoryName = "문화,예술 > 문화시설 > 미술관";
+                break;
+            }
+            case "카페": {
+                categoryName = "음식점 > 카페";
+                break;
+            }
+
+            case "룸카페": {
+                // 이름에 롬카페가 들어가면 ok인듯;
+                break;
+            }
+            case "방탈출카페": {
+                categoryName = "가정,생활 > 여가시설 > 방탈출카페";
+                break;
+            }
+            case "만화카페": {
+                categoryName = "가정,생활 > 여가시설 > 만화방 > 만화카페";
+                break;
+            }
+            case "동물원": {
+                categoryName = "여행 > 관광,명소 > 동물원";
+                // categoryName = "음식점 > 카페 > 테마카페 > 애견카페";
+                // categoryName = "음식점 > 카페 > 테마카페 > 고양이카페";
+                break;
+            }
+            case "보드게임": {
+                categoryName = "가정,생활 > 여가시설 > 보드카페";
+                break;
+            }
+            case "공방": {
+                // 그냥 공방카페라고 검색하면 됨.
+                break;
             }
         }
-    }*/
+
+        try {
+            if(categoryName != null) {
+                for (int index = 0; index < placesNode.size(); index++) {
+                    ObjectNode objectNode = (ObjectNode) placesNode.get(index);
+                    String nodeCategoryName = objectNode.get("category_name").asText();
+                    if (nodeCategoryName.contains(categoryName)) {
+                        JsonNode changedNode = objectNode;
+                        placesNode.set(index, changedNode);
+                    } else {
+                        NullNode nullNode = NullNode.instance;
+                        placesNode.set(index, nullNode);
+                    }
+                }
+
+                Iterator<JsonNode> iterator = placesNode.iterator();
+                while (iterator.hasNext()) {
+                    if (iterator.next().isNull()) {
+                        iterator.remove();
+                    }
+                }
+            }
+
+            return placesNode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
