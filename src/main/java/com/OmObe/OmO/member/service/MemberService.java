@@ -208,7 +208,7 @@ public class MemberService {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        // 토큰이 사용자의 토큰이 아니라면 예외 처리
+        // 토큰이 사용자의 토큰 혹은 관리자 토큰이 아니라면 예외 처리
         if (loginMember.getEmail().equals(member.getEmail()) || loginMember.getEmail().equals(adminEmail)) {
             return;
         }else{
@@ -220,7 +220,7 @@ public class MemberService {
     // 헤더 값 추출 메서드
     private String getHeader(String header) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        log.info("request.getHeader(header) : {}", request.getHeader(header));
+//        log.info("request.getHeader(header) : {}", request.getHeader(header));
 
         return request.getHeader(header);
     }
