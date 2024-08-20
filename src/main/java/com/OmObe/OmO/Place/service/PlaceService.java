@@ -626,7 +626,7 @@ public class PlaceService {
                          * ISFP = 3   || 0010
                          * ISFJ = 4   || 0011
                          * INTP = 5   || 0100
-                         * INTJ = 6   || 0101
+                         * INTJ = 6   || 0101       (-1 ~ 15)
                          * INFP = 7   || 0110
                          * INFJ = 8   || 0111
                          * ESTP = 9   || 1000
