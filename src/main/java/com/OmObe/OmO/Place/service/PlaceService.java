@@ -646,6 +646,9 @@ public class PlaceService {
                             for (int i = 0; i < place.getPlaceRecommendList().size(); i++) {
                                 PlaceRecommend placeRecommend = place.getPlaceRecommendList().get(i);
                                 int MBTI = placeRecommend.getMember().getMbti();
+                                if(MBTI<0){
+                                    continue;
+                                }
                                 String binary = makeMBTIToBinary4Length(MBTI);
                                 if (binary.charAt(0) == '0') {
                                     countI++;
