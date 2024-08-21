@@ -67,6 +67,7 @@ public class MyCourseDto {
         private String writerName;
         private Boolean myLiked;
         private Boolean share;
+        private Boolean writerUserMatch;
     }
 
 
