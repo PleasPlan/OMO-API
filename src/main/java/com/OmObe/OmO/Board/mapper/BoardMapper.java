@@ -81,7 +81,21 @@ public class BoardMapper {
                 commentResponseDtos.add(commentDto);
             }
 
-            BoardDto.Response response = new BoardDto.Response(boardId,title,content,type,writer,profileURL,createdTime,likeCount,viewCount,myLiked,commentResponseDtos);
+            boolean writerUserMatch = false;
+
+            BoardDto.Response response = new BoardDto.Response(
+                    boardId,
+                    title,
+                    content,
+                    type,
+                    writer,
+                    profileURL,
+                    createdTime,
+                    likeCount,
+                    viewCount,
+                    myLiked,
+                    writerUserMatch,
+                    commentResponseDtos);
             return response;
         }
     }
@@ -118,6 +132,7 @@ public class BoardMapper {
             int likeCount = board.getLikes().size();
             int viewCount = board.getViewCount();
             boolean myLiked = false;
+            boolean writerUserMatch = false;
             if(token != null){
                 Member loginMember = null;
 
@@ -127,6 +142,8 @@ public class BoardMapper {
                 if(optionalLiked.isPresent()) {
                     myLiked = board.getLikes().contains(optionalLiked.get());
                 }
+
+                writerUserMatch = board.getMember() == loginMember;
             }
 
 
@@ -136,7 +153,21 @@ public class BoardMapper {
                 commentResponseDtos.add(commentDto);
             }
 
-            BoardDto.Response response = new BoardDto.Response(boardId,title,content,type,writer,profileURL,createdTime,likeCount,viewCount,myLiked,commentResponseDtos);
+
+
+            BoardDto.Response response = new BoardDto.Response(
+                    boardId,
+                    title,
+                    content,
+                    type,
+                    writer,
+                    profileURL,
+                    createdTime,
+                    likeCount,
+                    viewCount,
+                    myLiked,
+                    writerUserMatch,
+                    commentResponseDtos);
             return response;
         }
     }

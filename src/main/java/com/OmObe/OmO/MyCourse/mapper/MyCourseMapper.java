@@ -137,7 +137,21 @@ public class MyCourseMapper {
             Optional<MyCourseLike> myLiked = myCourseLikeRepository.findByMemberAndMyCourse(member,course);
 
             Boolean shared = course.getShare();
-            MyCourseDto.ResponseDetailPlaceWithLiked response = new MyCourseDto.ResponseDetailPlaceWithLiked(courseId,courseName,contents,createdAt,modifiedAt,sharedAt,likeCount,writerName,myLiked.isPresent(),shared);
+            Boolean writerUserMatch = course.getMember() == member;
+            MyCourseDto.ResponseDetailPlaceWithLiked response =
+                    new MyCourseDto.ResponseDetailPlaceWithLiked(
+                            courseId,
+                            courseName,
+                            contents,
+                            createdAt,
+                            modifiedAt,
+                            sharedAt,
+                            likeCount,
+                            writerName,
+                            myLiked.isPresent(),
+                            shared,
+                            writerUserMatch
+                            );
             return response;
         }
     }

@@ -56,6 +56,7 @@ public class BoardDto {
         private int likeCount;
         private int viewCount;
         private boolean myLiked;
+        private boolean writerUserMatch;
         private List<CommentDto.Response> comments;
     }
 }
