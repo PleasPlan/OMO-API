@@ -10,6 +10,7 @@ import com.OmObe.OmO.Place.repository.PlaceRepository;
 import com.OmObe.OmO.Review.entity.Review;
 import com.OmObe.OmO.Review.repository.ReviewRepository;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
+import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.service.MemberService;
 import com.OmObe.OmO.util.PairJ;
@@ -446,6 +447,11 @@ public class PlaceService {
 
             placesNode = deleteNonCategory((ArrayNode) placesNode,category);
 
+            if(placesNode == NullNode.instance){
+                log.warn("Non-exist category");
+                return "Non-exist category";
+            }
+
             if(placesNode.isArray()){
                 for(JsonNode placeNode : placesNode){
                     long id = placeNode.get("id").asLong();
@@ -827,7 +833,7 @@ public class PlaceService {
                 // 이름에 롬카페가 들어가면 ok인듯;
                 break;
             }
-            case "방탈출카페": {
+            case "방탈출": {
                 categoryName = "가정,생활 > 여가시설 > 방탈출카페";
                 break;
             }
@@ -848,6 +854,9 @@ public class PlaceService {
             case "공방": {
                 // 그냥 공방카페라고 검색하면 됨.
                 break;
+            }
+            default:{
+                return NullNode.instance;
             }
         }
 
