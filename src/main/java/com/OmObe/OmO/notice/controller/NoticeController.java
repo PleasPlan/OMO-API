@@ -52,6 +52,12 @@ public class NoticeController {
     public ResponseEntity getNotices(@RequestParam int page,
                                      @RequestParam @Positive int size,
                                      @RequestParam String type) {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Slice<Notice> sortedNotices;
         if (type.equals("all")) { // 기본값은 최신순으로 조회
             sortedNotices = noticeService.getSortedNotice(page, size);
