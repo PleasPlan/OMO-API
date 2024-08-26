@@ -15,7 +15,8 @@ public enum ExceptionCode {
     NOTICE_TYPE_ERROR(404, "Notice type is not invalid. Please check the Notice Type.(default/NOR/CHK"),
     REPORT_REASON_NOT_EXIST(404, "Report reason is not exist. Please check the report reason"),
     COURSE_NOT_FOUND(404, "Missing Course"),
-    PAGE_NOT_IN_RANGE(400,"Page is not in range. please check again.");
+    PAGE_NOT_IN_RANGE(400,"Page is not in range. It must be positive number."),
+    SIZE_NOT_IN_RANGE(400,"Size is not in range. It must be positive number.");
 
 
     @Getter
