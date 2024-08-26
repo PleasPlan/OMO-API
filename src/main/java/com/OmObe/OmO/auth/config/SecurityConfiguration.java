@@ -67,6 +67,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/boardReport").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/commentReport").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/reviewReport").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.GET, "/myCourseReport").hasRole("ADMIN")
                         .antMatchers(HttpMethod.POST, "/notice/write/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/notice/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/notice/**").hasRole("ADMIN")

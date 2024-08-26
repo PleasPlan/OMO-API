@@ -1,14 +1,15 @@
-package com.OmObe.OmO.report.boardreport.dto;
+package com.OmObe.OmO.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
-public class BoardReportDto {
+public class ReportDto {
     @AllArgsConstructor
     @Getter
     @Setter
@@ -22,11 +23,11 @@ public class BoardReportDto {
     }
 
     @AllArgsConstructor
-    @NoArgsConstructor
     @Getter
     @Setter
+    @NoArgsConstructor
     public static class Response{
-        private Long boardReportId;
+        private Long reportId;
         private int reportType;
         private String reason;
         private LocalDateTime createdAt;

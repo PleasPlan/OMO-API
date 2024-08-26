@@ -1,6 +1,6 @@
-package com.OmObe.OmO.report.commentreport.entity;
+package com.OmObe.OmO.report.mycoursereport.entity;
 
-import com.OmObe.OmO.Comment.entity.Comment;
+import com.OmObe.OmO.MyCourse.entity.MyCourse;
 import com.OmObe.OmO.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CommentReport {
+public class MyCourseReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
@@ -36,15 +36,15 @@ public class CommentReport {
     @Column(updatable = false, name = "CREATED_AT")
     private LocalDateTime createdAt = LocalDateTime.now(); // 신고 작성 시간
 
-    // CommentReport - Member 다대일 매핑
+    // MyCourseReport - Member 다대일 매핑
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member; // 신고자
 
-    // CommentReport - Comment 다대일 매핑
+    // MyCourseReport - MyCourse 다대일 매핑
     @ManyToOne
-    @JoinColumn(name = "COMMENT_ID")
-    private Comment comment; // 신고된 댓글
+    @JoinColumn(name = "MYCOURSE_ID")
+    private MyCourse myCourse;
 
     public void setReportType(int reportType) {
         this.reportType = reportType;
@@ -54,15 +54,15 @@ public class CommentReport {
         this.reason = reason;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public void setMember(Member member) {
         this.member = member;
     }
 
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setMyCourse(MyCourse myCourse) {
+        this.myCourse = myCourse;
     }
 }

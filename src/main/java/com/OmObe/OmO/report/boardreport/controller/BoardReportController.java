@@ -1,7 +1,7 @@
 package com.OmObe.OmO.report.boardreport.controller;
 
 import com.OmObe.OmO.Board.response.MultiResponseDto;
-import com.OmObe.OmO.report.boardreport.dto.BoardReportDto;
+import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.boardreport.entity.BoardReport;
 import com.OmObe.OmO.report.boardreport.mapper.BoardReportMapper;
 import com.OmObe.OmO.report.boardreport.service.BoardReportService;
@@ -30,7 +30,7 @@ public class BoardReportController {
 
     // 게시글 신고
     @PostMapping("/{boardId}")
-    public ResponseEntity postBoardReport(@RequestBody @Valid BoardReportDto.Post post,
+    public ResponseEntity postBoardReport(@RequestBody @Valid ReportDto.Post post,
                                           @RequestHeader("Authorization") String token,
                                           @PathVariable("boardId") Long boardId) {
         BoardReport boardReport = boardReportService.createBoardReport(post, token, boardId);

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class BoardReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardReportId;
+    private Long reportId;
 
     /*
     <신고 유형>

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ReviewReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewReportId;
+    private Long reportId;
 
     /*
     <신고 유형>
