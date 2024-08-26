@@ -31,8 +31,7 @@ public class CommentDto {
     public static class Response{
         private long commentId;
         private String writer;
-//        TODO : 프로필 url이 주석 해제되면 다시 해제할 것.
-//        private String profileURL;
+        private String profileURL;
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
