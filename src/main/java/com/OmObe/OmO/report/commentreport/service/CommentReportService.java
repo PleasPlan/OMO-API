@@ -90,6 +90,6 @@ public class CommentReportService {
 
     // 신고 내용 목록을 과거순으로 조회
     private Pageable reportSortedBy(int page, int size) {
-        return PageRequest.of(page - 1, size, Sort.by("commentReportId").ascending());
+        return PageRequest.of(page - 1, size, Sort.by("reportId").ascending());
     }
 }
