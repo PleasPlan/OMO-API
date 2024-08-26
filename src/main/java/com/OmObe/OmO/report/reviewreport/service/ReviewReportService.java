@@ -7,7 +7,7 @@ import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.service.MemberService;
-import com.OmObe.OmO.report.reviewreport.dto.ReviewReportDto;
+import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.reviewreport.entity.ReviewReport;
 import com.OmObe.OmO.report.reviewreport.mapper.ReviewReportMapper;
 import com.OmObe.OmO.report.reviewreport.repository.ReviewReportRepository;
@@ -38,7 +38,7 @@ public class ReviewReportService {
      * 3. 인증된 사용자와 리뷰를 reviewReport 객체에 저장
      * 4. 신고 내용 저장
      */
-    public ReviewReport createReviewReport(ReviewReportDto.Post post, String token, Long reviewId) {
+    public ReviewReport createReviewReport(ReportDto.Post post, String token, Long reviewId) {
         // 1. 리뷰 검증(존재하는 리뷰?)
         Review review = reviewService.findReview(reviewId);
 
