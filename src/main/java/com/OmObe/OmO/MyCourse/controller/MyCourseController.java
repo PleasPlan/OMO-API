@@ -7,6 +7,8 @@ import com.OmObe.OmO.MyCourse.entity.MyCourse;
 import com.OmObe.OmO.MyCourse.mapper.MyCourseMapper;
 import com.OmObe.OmO.MyCourse.service.MyCourseService;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.SneakyThrows;
@@ -100,6 +102,12 @@ public class MyCourseController {
                                      @Positive @RequestParam(defaultValue = "10") int size,
                                      @RequestParam String sorting,
                                      @Nullable @RequestHeader(value = "Authorization") String token){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Boolean IE = null;
         Boolean PJ = null;
         switch (IorE) {
@@ -144,7 +152,12 @@ public class MyCourseController {
     public ResponseEntity getMyCourses(@RequestHeader("Authorization") String token,
                                        @RequestParam(defaultValue = "1") int page,
                                        @Positive @RequestParam(defaultValue = "10") int size){
-
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Member member = tokenDecryption.getWriterInJWTToken(token);
         Slice<MyCourse> pageMyCourses = myCourseService.findMyCourses(member,page-1,size);
 
