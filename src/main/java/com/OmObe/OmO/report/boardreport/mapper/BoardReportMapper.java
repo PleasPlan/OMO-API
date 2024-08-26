@@ -1,7 +1,6 @@
 package com.OmObe.OmO.report.boardreport.mapper;
 
 import com.OmObe.OmO.report.ReportDto;
-import com.OmObe.OmO.report.boardreport.dto.BoardReportDto;
 import com.OmObe.OmO.report.boardreport.entity.BoardReport;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
