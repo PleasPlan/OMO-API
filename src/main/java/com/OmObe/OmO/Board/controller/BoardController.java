@@ -105,6 +105,9 @@ public class BoardController {
         if(page <= 0){
             throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
         }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Slice<Board> pageBoards = null;
             switch (sorting){
                 case "createdAt":
@@ -132,6 +135,9 @@ public class BoardController {
                                         @RequestHeader("Authorization") @Nullable String token){
         if(page <= 0){
             throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
         }
         Slice<Board> pageBoards = null;
         switch (sorting){
@@ -161,6 +167,9 @@ public class BoardController {
         if(page <= 0){
             throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
         }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
@@ -188,6 +197,9 @@ public class BoardController {
                                        @RequestHeader("Authorization") @Nullable String token){
         if(page <= 0){
             throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
         }
         Slice<Board> pageBoards = null;
         switch (sorting){
