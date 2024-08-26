@@ -2,7 +2,6 @@ package com.OmObe.OmO.report.boardreport.controller;
 
 import com.OmObe.OmO.Board.response.MultiResponseDto;
 import com.OmObe.OmO.report.ReportDto;
-import com.OmObe.OmO.report.boardreport.dto.BoardReportDto;
 import com.OmObe.OmO.report.boardreport.entity.BoardReport;
 import com.OmObe.OmO.report.boardreport.mapper.BoardReportMapper;
 import com.OmObe.OmO.report.boardreport.service.BoardReportService;

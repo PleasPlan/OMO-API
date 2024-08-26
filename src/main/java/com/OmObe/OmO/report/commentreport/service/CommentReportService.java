@@ -7,7 +7,7 @@ import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.service.MemberService;
-import com.OmObe.OmO.report.commentreport.dto.CommentReportDto;
+import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.commentreport.entity.CommentReport;
 import com.OmObe.OmO.report.commentreport.mapper.CommentReportMapper;
 import com.OmObe.OmO.report.commentreport.repository.CommentReportRepository;
@@ -39,7 +39,7 @@ public class CommentReportService {
      * 3. 인증된 사용자와 댓글 정보를 commentReport 객체에 저장
      * 4. 신고 내용 저장
      */
-    public CommentReport createCommentReport(CommentReportDto.Post post, String token, Long commentId) {
+    public CommentReport createCommentReport(ReportDto.Post post, String token, Long commentId) {
         // 1. 댓글 검증(존재하는 댓글?)
         Comment comment = commentService.findComment(commentId);
 
