@@ -7,6 +7,7 @@ import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.service.MemberService;
+import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.boardreport.dto.BoardReportDto;
 import com.OmObe.OmO.report.boardreport.entity.BoardReport;
 import com.OmObe.OmO.report.boardreport.mapper.BoardReportMapper;
@@ -40,7 +41,7 @@ public class BoardReportService {
      * 3. 인증된 사용자와 게시글을 boardReport 객체에 저장
      * 4. 신고 내용 저장
      */
-    public BoardReport createBoardReport(BoardReportDto.Post post, String token, Long boardId) {
+    public BoardReport createBoardReport(ReportDto.Post post, String token, Long boardId) {
 
         // 1. 게시글 검증(존재하는 게시글?)
         Board board = boardService.findBoard(boardId);
