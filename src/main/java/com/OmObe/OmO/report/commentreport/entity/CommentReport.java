@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class CommentReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentReportId;
+    private Long reportId;
 
     /*
     <신고 유형>
