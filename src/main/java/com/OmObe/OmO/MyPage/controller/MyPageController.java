@@ -12,6 +12,8 @@ import com.OmObe.OmO.Place.entity.Place;
 import com.OmObe.OmO.Place.entity.PlaceLike;
 import com.OmObe.OmO.Place.service.PlaceService;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.dto.MemberDto;
 import com.OmObe.OmO.member.entity.Member;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,6 +51,12 @@ public class MyPageController {
     public ResponseEntity getLikes(@RequestHeader("Authorization") String token,
                                    @RequestParam(defaultValue = "1") int page,
                                    @Positive @RequestParam(defaultValue = "10") int size) throws JsonProcessingException {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
         String placeList = myPageService.findPlaceLikedByMember(member, page - 1, size);
@@ -60,6 +68,12 @@ public class MyPageController {
     public ResponseEntity getRecommend(@RequestHeader("Authorization") String token,
                                        @RequestParam(defaultValue = "1") int page,
                                        @Positive @RequestParam(defaultValue = "10") int size) throws JsonProcessingException {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
         String placeList = myPageService.findPlaceRecommendByMember(member, page - 1, size);
@@ -72,6 +86,12 @@ public class MyPageController {
     public ResponseEntity getMyBoard(@RequestHeader("Authorization") String token,
                                      @RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "10") int size) throws JsonProcessingException {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
         List<Board> boardList = myPageService.getMyBoard(member, page - 1, size);
@@ -87,6 +107,12 @@ public class MyPageController {
                                        @RequestParam(defaultValue = "!") int page,
                                        @Positive @RequestParam(defaultValue = "10") int size,
                                        @RequestBody MyPageDto.PlaceList placeList) throws JsonProcessingException {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Member member = tokenDecryption.getWriterInJWTToken(token);
 
         List<String> placeNameList = placeList.getPlaceNameList();
