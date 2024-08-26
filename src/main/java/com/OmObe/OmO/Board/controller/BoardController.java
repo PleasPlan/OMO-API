@@ -7,6 +7,8 @@ import com.OmObe.OmO.Board.response.MultiResponseDto;
 import com.OmObe.OmO.Board.service.BoardService;
 import com.OmObe.OmO.Liked.repository.LikedRepository;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.repository.MemberRepository;
 import com.OmObe.OmO.member.service.MemberService;
@@ -100,6 +102,9 @@ public class BoardController {
                                            @Positive @RequestParam(defaultValue = "10") int size,
                                            @RequestParam String sorting,
                                            @RequestHeader("Authorization") @Nullable String token){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
         Slice<Board> pageBoards = null;
             switch (sorting){
                 case "createdAt":
@@ -125,6 +130,9 @@ public class BoardController {
                                            @Positive @RequestParam(defaultValue = "10") int size,
                                            @RequestParam String sorting,
                                         @RequestHeader("Authorization") @Nullable String token){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
@@ -150,6 +158,9 @@ public class BoardController {
                                         @Positive @RequestParam(defaultValue = "10") int size,
                                         @RequestParam String sorting,
                                        @RequestHeader("Authorization") @Nullable String token){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
@@ -175,6 +186,9 @@ public class BoardController {
                                         @Positive @RequestParam(defaultValue = "10") int size,
                                         @RequestParam String sorting,
                                        @RequestHeader("Authorization") @Nullable String token){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
         Slice<Board> pageBoards = null;
         switch (sorting){
             case "createdAt":
