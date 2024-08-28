@@ -156,7 +156,7 @@ public class MyPageService {
         return responseBody;
     }
 
-    private String getOnePlace(String jsonData, long placeId, Member member) {
+    private JsonNode getOnePlace(String jsonData, long placeId, Member member) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
@@ -218,7 +218,7 @@ public class MyPageService {
             }
 
             JsonNode resultNode = placesNode.get(0);
-            return objectMapper.writeValueAsString(resultNode);
+            return resultNode;
         } catch (Exception e) {
             e.printStackTrace();
         }
