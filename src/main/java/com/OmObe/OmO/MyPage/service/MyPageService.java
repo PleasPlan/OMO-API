@@ -134,7 +134,7 @@ public class MyPageService {
         }
     }
 
-    public String getPlace(String placeName,long placeId,Member member) {
+    public JsonNode getPlace(String placeName,long placeId,Member member) {
 
         String keyword;
         try{
@@ -151,9 +151,10 @@ public class MyPageService {
         requestHeader.put("Authorization", "KakaoAK "+key);
         String responseBody = get(webAddress, requestHeader);
 
-        responseBody = getOnePlace(responseBody,placeId, member);
+        JsonNode response = getOnePlace(responseBody,placeId, member);
+
         // TODO: MBTI 통계 내야됨. 장소 찜 및 따봉은 구현 전
-        return responseBody;
+        return response;
     }
 
     private JsonNode getOnePlace(String jsonData, long placeId, Member member) {
