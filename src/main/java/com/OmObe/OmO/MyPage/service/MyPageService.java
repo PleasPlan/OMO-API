@@ -138,25 +138,46 @@ public class MyPageService {
 
     public String findLastPlace(Member member,int page,int size,List<String> placeNameList, List<Long> placeIdList){
         int start = size*page;
+
+        ArrayNode recentPlace = JsonNodeFactory.instance.arrayNode();
+
+        boolean isEnd = false;
+
         if(placeNameList.size()>start){
-            StringBuilder placeList = new StringBuilder("[");
             if(placeNameList.size()-start < size){
                 for (int i = 0; i < placeNameList.size()%size; i++) {
                     String placeName = placeNameList.get(start+i);
                     Long placeId = placeIdList.get(start+i);
-                    String findPlace = getPlace(placeName, placeId, member);
-                    placeList.append(findPlace).append(",");
+                    JsonNode findPlace = getPlace(placeName, placeId, member);
+                    recentPlace.add(findPlace);
+                    if(start+i==placeNameList.size()-1){
+                        isEnd = true;
+                    }
                 }
             }else {
                 for (int i = 0; i < placeNameList.size(); i++) {
                     String placeName = placeNameList.get(start+i);
                     Long placeId = placeIdList.get(start+i);
-                    String findPlace = getPlace(placeName, placeId, member);
-                    placeList.append(findPlace).append(",");
+                    JsonNode findPlace = getPlace(placeName, placeId, member);
+                    recentPlace.add(findPlace);
+                    if(start+i==placeNameList.size()-1){
+                        isEnd = true;
+                    }
                 }
             }
-            placeList.replace(placeList.length() - 1, placeList.length(), "]");
-            return placeList.toString();
+            ObjectNode response = objectMapper.createObjectNode();
+            response.set("likedPlace",recentPlace);
+
+            ObjectNode meta = objectMapper.createObjectNode();
+            meta.put("is_end",isEnd);
+            meta.put("pageable_count",placeNameList.size()/size);
+            meta.put("total_count",placeNameList.size());
+            response.set("meta",meta);
+            try {
+                return objectMapper.writeValueAsString(response);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             return "null";
         }
