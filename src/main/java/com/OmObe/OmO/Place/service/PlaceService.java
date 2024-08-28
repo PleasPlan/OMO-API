@@ -97,21 +97,27 @@ public class PlaceService {
     }
 
     public String getRecentPlace(List<String> placeNameList, List<Long> placeIdList, Member member){
-        StringBuilder allResponse = new StringBuilder();
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode arrayNode = mapper.createArrayNode();
+        ArrayNode recentPlace = mapper.createArrayNode();
         for(int index = 0; index<placeIdList.size(); index++){
-            allResponse.append(getPlace(placeNameList.get(index),placeIdList.get(index),member));
-            allResponse.append(",");
             try {
-                arrayNode.add(mapper.readTree(getPlace(placeNameList.get(index),placeIdList.get(index),member)));
+                recentPlace.add(mapper.readTree(getPlace(placeNameList.get(index),placeIdList.get(index),member)));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         }
-        allResponse.deleteCharAt(allResponse.length()-1);
-//        return allResponse.toString();
-        return arrayNode.toString();
+
+        ObjectNode response = mapper.createObjectNode();
+        response.set("recentPlace",recentPlace);
+
+        ObjectNode meta = mapper.createObjectNode();
+        meta.put("total_count",placeNameList.size());
+
+        try {
+            return mapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getPlace(String placeName,long placeId,Member member) {
