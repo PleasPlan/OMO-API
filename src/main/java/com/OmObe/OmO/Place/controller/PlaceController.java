@@ -3,6 +3,8 @@ package com.OmObe.OmO.Place.controller;
 import com.OmObe.OmO.Place.dto.PlaceRecent;
 import com.OmObe.OmO.Place.service.PlaceService;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.service.MemberService;
 import com.OmObe.OmO.util.PairJ;
@@ -39,6 +41,9 @@ public class PlaceController {
                                     @RequestHeader @Range(min = -180,max = 180) double x,
                                     @RequestParam("page") int page,
                                     @RequestHeader("Authorization") @Nullable String token){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
         PairJ<Double, Double> middle = new PairJ<>();
         middle.setFirst(y);    // y (위도)
         middle.setSecond(x);   // x (경도)
@@ -99,7 +104,9 @@ public class PlaceController {
     public ResponseEntity getPlaceWithoutId(@PathVariable("placeName") String placeName,
                                             @RequestParam("page") int page,
                                             @Nullable @RequestHeader("Authorization") String token){
-
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
         String response = placeService.getPlace(placeName,page,token);
 
         return new ResponseEntity<>(response, HttpStatus.OK);

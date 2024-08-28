@@ -1,5 +1,7 @@
 package com.OmObe.OmO.report.reviewreport.controller;
 
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.reviewreport.entity.ReviewReport;
 import com.OmObe.OmO.report.reviewreport.mapper.ReviewReportMapper;
@@ -39,6 +41,12 @@ public class ReviewReportController {
     public ResponseEntity getReviewReports(@RequestParam @Positive int page,
                                            @RequestParam @Positive int size,
                                            @RequestHeader("Authorization") String token) {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Page<ReviewReport> reviewReports = reviewReportService.getReviewReports(page, size, token);
         List<ReviewReport> reviewReportList = reviewReports.getContent();
 

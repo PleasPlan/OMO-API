@@ -1,5 +1,7 @@
 package com.OmObe.OmO.report.mycoursereport.controller;
 
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.mycoursereport.entity.MyCourseReport;
 import com.OmObe.OmO.report.mycoursereport.mapper.MyCourseReportMapper;
@@ -39,6 +41,12 @@ public class MyCourseReportController {
     public ResponseEntity getMyCourseReports(@RequestParam @Positive int page,
                                              @RequestParam @Positive int size,
                                              @RequestHeader("Authorization") String token) {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Page<MyCourseReport> myCourseReports = myCourseReportService.getMyCourseReports(page, size, token);
         List<MyCourseReport> myCourseReportList = myCourseReports.getContent();
 

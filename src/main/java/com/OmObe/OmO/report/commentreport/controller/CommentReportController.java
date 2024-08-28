@@ -1,5 +1,7 @@
 package com.OmObe.OmO.report.commentreport.controller;
 
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.report.ReportDto;
 import com.OmObe.OmO.report.commentreport.entity.CommentReport;
 import com.OmObe.OmO.report.commentreport.mapper.CommentReportMapper;
@@ -39,6 +41,12 @@ public class CommentReportController {
     public ResponseEntity getCommentReports(@RequestParam @Positive int page,
                                             @RequestParam @Positive int size,
                                             @RequestHeader("Authorization") String token) {
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Page<CommentReport> commentReports = commentReportService.getCommentReports(page, size, token);
         List<CommentReport> commentReportList = commentReports.getContent();
 

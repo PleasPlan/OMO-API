@@ -7,6 +7,8 @@ import com.OmObe.OmO.Review.mapper.ReviewMapper;
 import com.OmObe.OmO.Review.repository.ReviewRepository;
 import com.OmObe.OmO.Review.service.ReviewService;
 import com.OmObe.OmO.auth.jwt.TokenDecryption;
+import com.OmObe.OmO.exception.BusinessLogicException;
+import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +88,12 @@ public class ReviewController {
     public ResponseEntity getReviews(@RequestParam(defaultValue = "1") int page,
                                      @Positive @RequestParam(defaultValue = "5") int size,
                                      @PathVariable("place-Id") long placeId){
+        if(page <= 0){
+            throw new BusinessLogicException(ExceptionCode.PAGE_NOT_IN_RANGE);
+        }
+        if(size <= 0){
+            throw new BusinessLogicException(ExceptionCode.SIZE_NOT_IN_RANGE);
+        }
         Page<Review> pageReviews = reviewService.findReviewsByCreatedAt(placeId,page-1,size);
         List<Review> reviews = pageReviews.getContent();
         return new ResponseEntity<>(
