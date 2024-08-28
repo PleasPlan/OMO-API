@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
@@ -60,40 +61,67 @@ public class MyPageService {
     private final MemberRepository memberRepository;
     private final ReviewService reviewService; // 이미지 파일 관련 메서드가 ReviewService에 있음 todo: 이미지 파일 관련 기능은 따로 분리해서 관리할 것
     private final ImageManager imageManager;
+    private final ObjectMapper objectMapper;
 
     public String findPlaceLikedByMember(Member member, int page, int size){
         pageUtility<PlaceLike> utility = new pageUtility<>();
         Slice<PlaceLike> placeLikeSlice = utility.convertToSlice(placeLikeRepository.findAll(utility.withMember(member),PageRequest.of(page,size)));
         List<PlaceLike> placeLikeList = placeLikeSlice.getContent();
 
+        ArrayNode likedPlace = JsonNodeFactory.instance.arrayNode();
+
         if(!placeLikeList.isEmpty()) {
-            StringBuilder placeList = new StringBuilder("[");
             for (PlaceLike placeLike : placeLikeList) {
                 Place place = placeLike.getPlace();
-                String findPlace = getPlace(place.getPlaceName(), place.getPlaceId(), member);
-                placeList.append(findPlace).append(",");
+                JsonNode findPlace = getPlace(place.getPlaceName(), place.getPlaceId(), member);
+                likedPlace.add(findPlace);
             }
-            placeList.replace(placeList.length() - 1, placeList.length(), "]");
-            return placeList.toString();
+            ObjectNode response = objectMapper.createObjectNode();
+            response.set("likedPlace",likedPlace);
+
+            ObjectNode meta = objectMapper.createObjectNode();
+            Page<PlaceLike> pageList = placeLikeRepository.findAll(utility.withMember(member),PageRequest.of(page+1,size));
+            meta.put("is_end",pageList.getNumber() >= pageList.getTotalPages());
+            meta.put("pageable_count",pageList.getTotalPages());
+            meta.put("total_count",pageList.getTotalElements());
+            response.set("meta",meta);
+            try {
+                return objectMapper.writeValueAsString(response);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            return "null";
+            return null;
         }
     }
 
     public String findPlaceRecommendByMember(Member member, int page, int size){
         pageUtility<PlaceRecommend> utility = new pageUtility<>();
-        Slice<PlaceRecommend> placeLikeSlice = utility.convertToSlice(placeRecommendRepository.findAll(utility.withMember(member),PageRequest.of(page,size)));
-        List<PlaceRecommend> placeLikeList = placeLikeSlice.getContent();
+        Slice<PlaceRecommend> placeRecommendSlice = utility.convertToSlice(placeRecommendRepository.findAll(utility.withMember(member),PageRequest.of(page,size)));
+        List<PlaceRecommend> placeRecommendList = placeRecommendSlice.getContent();
 
-        if(!placeLikeList.isEmpty()) {
-            StringBuilder placeList = new StringBuilder("[");
-            for (PlaceRecommend placeRecommend : placeLikeList) {
+        ArrayNode recommendPlace = JsonNodeFactory.instance.arrayNode();
+
+        if(!placeRecommendList.isEmpty()) {
+            for (PlaceRecommend placeRecommend : placeRecommendList) {
                 Place place = placeRecommend.getPlace();
-                String findPlace = getPlace(place.getPlaceName(), place.getPlaceId(), member);
-                placeList.append(findPlace).append(",");
+                JsonNode findPlace = getPlace(place.getPlaceName(), place.getPlaceId(), member);
+                recommendPlace.add(findPlace);
             }
-            placeList.replace(placeList.length() - 1, placeList.length(), "]");
-            return placeList.toString();
+            ObjectNode response = objectMapper.createObjectNode();
+            response.set("likedPlace",recommendPlace);
+
+            ObjectNode meta = objectMapper.createObjectNode();
+            Page<PlaceRecommend> pageList = placeRecommendRepository.findAll(utility.withMember(member),PageRequest.of(page+1,size));
+            meta.put("is_end",pageList.getNumber() >= pageList.getTotalPages());
+            meta.put("pageable_count",pageList.getTotalPages());
+            meta.put("total_count",pageList.getTotalElements());
+            response.set("meta",meta);
+            try {
+                return objectMapper.writeValueAsString(response);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             return null;
         }
