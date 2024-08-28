@@ -65,7 +65,7 @@ public class MyCourseController {
         List<MyCourse> courseList = mapper.coursePatchDtoToCourse(patchDto);
         Long startId = patchDto.getCourseId();
         Member writer = tokenDecryption.getWriterInJWTToken(token);
-        MyCourse myCourse = myCourseService.updateCourse(patchDto.getCourseName(),courseList,startId,writer);
+        MyCourse myCourse = myCourseService.updateCourse(patchDto.getCourseName(),courseList,startId,writer, token);
         MyCourseDto.ResponseDetailPlace response = mapper.courseToCourseResponseDtoDetailPlace(myCourse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -170,7 +170,7 @@ public class MyCourseController {
     @DeleteMapping("/{course-id}")
     public ResponseEntity deleteCourse(@RequestHeader("Authorization") String token,
                                        @PathVariable("course-id") long startId){
-        myCourseService.deleteCourse(startId);
+        myCourseService.deleteCourse(startId, token);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

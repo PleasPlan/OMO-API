@@ -4,9 +4,11 @@ import com.OmObe.OmO.MyCourse.entity.MyCourse;
 import com.OmObe.OmO.MyCourse.entity.MyCourseLike;
 import com.OmObe.OmO.MyCourse.repository.MyCourseLikeRepository;
 import com.OmObe.OmO.MyCourse.repository.MyCourseRepository;
+import com.OmObe.OmO.auth.jwt.TokenDecryption;
 import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
+import com.OmObe.OmO.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,11 +30,17 @@ public class MyCourseService {
 
     private final MyCourseRepository myCourseRepository;
     private final MyCourseLikeRepository myCourseLikeRepository;
+    private final MemberService memberService;
+    private final TokenDecryption tokenDecryption;
 
     public MyCourseService(MyCourseRepository myCourseRepository,
-                           MyCourseLikeRepository myCourseLikeRepository) {
+                           MyCourseLikeRepository myCourseLikeRepository,
+                           MemberService memberService,
+                           TokenDecryption tokenDecryption) {
         this.myCourseRepository = myCourseRepository;
         this.myCourseLikeRepository = myCourseLikeRepository;
+        this.memberService = memberService;
+        this.tokenDecryption = tokenDecryption;
     }
 
     public MyCourse createCourse(List<MyCourse> course, Member writer){
@@ -51,8 +59,17 @@ public class MyCourseService {
     }
 
 
-    public MyCourse updateCourse(String newCourseName,List<MyCourse> course,long startId, Member writer){
+    public MyCourse updateCourse(String newCourseName,List<MyCourse> course,long startId, Member writer, String token){
         log.info("enter 3-1");
+        MyCourse myCourse = findCourse(startId);
+        // 사용자 로그인 검증
+        try {
+            memberService.verifiedAuthenticatedMember(writer.getMemberId());
+            memberService.verifiedAuthenticatedMember(myCourse.getMember().getMemberId());
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
+        }
+
         Collections.reverse(course);
         List<Long> courseIdList = new ArrayList<>();
 
@@ -72,7 +89,7 @@ public class MyCourseService {
                 if (i == course.size() - 1) {
                     part.setNextCourse(null);
                     // TODO : 이후 있는 모든 연결 데이터 삭제
-                    deleteCourse(courseIdList.get(i+1));
+                    deleteCourse(courseIdList.get(i+1), token);
                 }
                 myCourseRepository.save(part);
             }
@@ -154,8 +171,16 @@ public class MyCourseService {
         return myCourseRepository.findAll(withMember(member)).size();
     }
 
-    public void deleteCourse(long courseId){
+    public void deleteCourse(long courseId, String token){
         MyCourse start = findCourse(courseId);
+        // 사용자 인증 상태 검증
+        try {
+            Member writer = tokenDecryption.getWriterInJWTToken(token);
+            memberService.verifiedAuthenticatedMember(writer.getMemberId()); // 요청으로 들어온 토큰이 서비스 접근에 시도하는 사용자의 토큰인지 확인
+            memberService.verifiedAuthenticatedMember(start.getMember().getMemberId()); // 삭제하고자하는 사용자가 나만의 코스 작성자인지 확인
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
+        }
         myCourseRepository.delete(start);
     }
 
