@@ -7,6 +7,7 @@ import com.OmObe.OmO.MyCourse.repository.MyCourseRepository;
 import com.OmObe.OmO.exception.BusinessLogicException;
 import com.OmObe.OmO.exception.ExceptionCode;
 import com.OmObe.OmO.member.entity.Member;
+import com.OmObe.OmO.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,11 +29,13 @@ public class MyCourseService {
 
     private final MyCourseRepository myCourseRepository;
     private final MyCourseLikeRepository myCourseLikeRepository;
+    private final MemberService memberService;
 
     public MyCourseService(MyCourseRepository myCourseRepository,
-                           MyCourseLikeRepository myCourseLikeRepository) {
+                           MyCourseLikeRepository myCourseLikeRepository, MemberService memberService) {
         this.myCourseRepository = myCourseRepository;
         this.myCourseLikeRepository = myCourseLikeRepository;
+        this.memberService = memberService;
     }
 
     public MyCourse createCourse(List<MyCourse> course, Member writer){
@@ -53,6 +56,15 @@ public class MyCourseService {
 
     public MyCourse updateCourse(String newCourseName,List<MyCourse> course,long startId, Member writer){
         log.info("enter 3-1");
+        MyCourse myCourse = findCourse(startId);
+        // 사용자 로그인 검증
+        try {
+            memberService.verifiedAuthenticatedMember(writer.getMemberId());
+            memberService.verifiedAuthenticatedMember(myCourse.getMember().getMemberId());
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
+        }
+
         Collections.reverse(course);
         List<Long> courseIdList = new ArrayList<>();
 
