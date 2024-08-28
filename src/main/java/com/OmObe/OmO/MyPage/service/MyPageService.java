@@ -109,7 +109,7 @@ public class MyPageService {
                 recommendPlace.add(findPlace);
             }
             ObjectNode response = objectMapper.createObjectNode();
-            response.set("likedPlace",recommendPlace);
+            response.set("recommendPlace",recommendPlace);
 
             ObjectNode meta = objectMapper.createObjectNode();
             Page<PlaceRecommend> pageList = placeRecommendRepository.findAll(utility.withMember(member),PageRequest.of(page+1,size));
@@ -166,7 +166,7 @@ public class MyPageService {
                 }
             }
             ObjectNode response = objectMapper.createObjectNode();
-            response.set("likedPlace",recentPlace);
+            response.set("recentPlace",recentPlace);
 
             ObjectNode meta = objectMapper.createObjectNode();
             meta.put("is_end",isEnd);
