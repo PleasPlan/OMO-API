@@ -52,7 +52,7 @@ public class BoardController {
 *
 * */
 
-    // TODO : JWT 서비스 시에 실행할 것.
+    // TODO: USER만 가능
     @SneakyThrows
     @PostMapping("/write")
     public ResponseEntity postBoard(@Valid @RequestBody BoardDto.Post postDto,
@@ -70,6 +70,7 @@ public class BoardController {
                 HttpStatus.CREATED);
     }
 
+    // TODO: USER만 가능
     @SneakyThrows
     @PatchMapping("/modification/{board-id}")
     public ResponseEntity patchBoard(@Valid @RequestBody BoardDto.Patch patchDto,
@@ -92,8 +93,6 @@ public class BoardController {
         return new ResponseEntity<>(mapper.boardToBoardResponseDto(board,token),
                 HttpStatus.OK);
     }
-
-    // TODO : size를 고정하고 싶은데 한번 로드할 때 얼마나 할지로 나중에 회의로 정해야겠당.
 
     // 다음 페이지가 있을 때 다음 페이지 로드 가능
     // 좋아요 순, 최신 순, 댓글 많은 순, 조회수 많은 순
@@ -221,6 +220,7 @@ public class BoardController {
                 new MultiResponseDto<>(mapper.boardsToBoardResponseDtos(boards,token),pageBoards),HttpStatus.OK);
     }
 
+    // TODO: USER만 가능
     @DeleteMapping("/{board-id}")
     public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId,
                                       @RequestHeader("Authorization") String token){
@@ -229,6 +229,7 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // TODO: USER만 가능
     @PutMapping("/like/{boardId}")
     public ResponseEntity likeBoard(@PathVariable("boardId") @Positive long boardId,
                                     @RequestHeader("Authorization") String Token) throws JsonProcessingException {
