@@ -53,6 +53,7 @@ public class PlaceController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // TODO: USER만 가능
     @PutMapping("/{placeName}")
     public ResponseEntity MineOrRecommend(@PathVariable("placeName") String placeName,
                                           @RequestHeader("placeId") long placeId,
