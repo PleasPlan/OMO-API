@@ -46,8 +46,8 @@ public class CommentController {
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
     }
-    // TODO : JWT 서비스 시에 실행할 것(완)
 
+    // TODO: USER만 가능
     @SneakyThrows
     @PostMapping("/write")
     public ResponseEntity postComment(@Valid @RequestBody CommentDto.Post postDto,
@@ -75,6 +75,7 @@ public class CommentController {
                 HttpStatus.CREATED);
     }*/
 
+    // TODO: USER만 가능
     @PatchMapping("/modification/{comment-id}")
     public ResponseEntity patchComment(@Valid @RequestBody CommentDto.Patch patchDto,
                                        @PathVariable("comment-id") @Positive long commentId,
@@ -99,6 +100,7 @@ public class CommentController {
                 new MultiResponseDto<>(mapper.commentsToCommentResponseDtos(comments),pageComments),HttpStatus.OK);
     }
 
+    // TODO: USER만 가능
     @DeleteMapping("/{comment-Id}")
     public ResponseEntity deleteComment(@PathVariable("comment-Id") @Positive long commentId,
                                         @RequestHeader("Authorization") String token){

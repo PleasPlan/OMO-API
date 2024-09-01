@@ -42,6 +42,7 @@ public class ReviewController {
         this.tokenDecryption = tokenDecryption;
     }
 
+    // TODO: USER만 가능
     @SneakyThrows
     @PostMapping("/write")
     public ResponseEntity postReview(//@Valid @RequestBody ReviewDto.Post postDto,
@@ -60,6 +61,7 @@ public class ReviewController {
                 HttpStatus.CREATED);
     }
 
+    // TODO: USER만 가능
     @PatchMapping("/modification")
     public ResponseEntity patchReview(@RequestParam("content") String content,
                                       @RequestHeader("review-id") long reviewId,
@@ -101,6 +103,7 @@ public class ReviewController {
                         HttpStatus.OK);
     }
 
+    // TODO: USER만 가능
     @DeleteMapping("/{review-Id}")
     public ResponseEntity deleteReview(@PathVariable("review-Id") @Positive long reviewId,
                                        @RequestHeader("Authorization") String token){

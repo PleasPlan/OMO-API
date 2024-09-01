@@ -43,7 +43,7 @@ public class MyCourseController {
         this.tokenDecryption = tokenDecryption;
     }
 
-
+    // TODO: USER만 가능
     @PostMapping("/new")
     public ResponseEntity postCourse(@RequestBody MyCourseDto.Post postDto,
                                      @RequestHeader("Authorization") String token){
@@ -59,6 +59,7 @@ public class MyCourseController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    // TODO: USER만 가능
     @PutMapping("/rebuild")
     public ResponseEntity patchCourse(@RequestBody MyCourseDto.Patch patchDto,
                                       @RequestHeader("Authorization") String token){
@@ -70,6 +71,7 @@ public class MyCourseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // TODO: USER만 가능
     @PatchMapping("/share/{course-id}")
     public ResponseEntity shareCourse(@PathVariable("course-id") long courseId,
                                       @RequestHeader("Authorization") String token){
@@ -78,6 +80,7 @@ public class MyCourseController {
         MyCourseDto.ResponseDetailPlaceWithLiked response = mapper.courseToCourseResponseDtoDetailPlace(myCourse,member);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @GetMapping("/{course-id}")
     public ResponseEntity getCourse(@RequestHeader("Authorization") String token,
                                     @PathVariable("course-id") long startId){
@@ -167,6 +170,7 @@ public class MyCourseController {
         return new ResponseEntity<>(new MultiResponseDto<>(responses, pageMyCourses), HttpStatus.OK);
     }
 
+    // TODO: USER만 가능
     @DeleteMapping("/{course-id}")
     public ResponseEntity deleteCourse(@RequestHeader("Authorization") String token,
                                        @PathVariable("course-id") long startId){
@@ -174,6 +178,7 @@ public class MyCourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // TODO: USER만 가능
     @PutMapping("/like/{course-id}")
     public ResponseEntity postMyCourseLike(@RequestHeader("Authorization") String token,
                                            @PathVariable("course-id") long startId){
