@@ -79,6 +79,13 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE, "/board/*").hasAnyRole("ADMIN", "USER") // 게시글 삭제 권한 설정
                         .antMatchers(HttpMethod.PUT, "/board/like/*").hasAnyRole("ADMIN", "USER") // 게시글 좋아요 권한 설정
 
+                        // 나만의 코스 권한 설정
+                        .antMatchers(HttpMethod.POST, "/mycourse/new").hasAnyRole("ADMIN", "USER") // 나만의 코스 작성 권한 설정
+                        .antMatchers(HttpMethod.PUT, "/mycourse/rebuild").hasAnyRole("ADMIN", "USER") // 나만의 코스 수정 권한 설정
+                        .antMatchers(HttpMethod.PATCH, "/mycourse/share/*").hasAnyRole("ADMIN", "USER") // 나만의 코스 공유 권한 설정
+                        .antMatchers(HttpMethod.DELETE, "/mycourse/*").hasAnyRole("ADMIN", "USER") // 나만의 코스 삭제 권한 설정
+                        .antMatchers(HttpMethod.PUT, "/mycourse/like/*").hasAnyRole("ADMIN", "USER") // 나만의 코스 좋아요 권한 설정
+
                         // 전체 허용
                         .antMatchers(HttpMethod.POST, "/h2/**").permitAll() // todo: 테스트용 db 조회 -> 관리자 권한만 접근하도록 수정할 것
                         .antMatchers(HttpMethod.POST, "/signup").permitAll()
