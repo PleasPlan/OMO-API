@@ -43,9 +43,12 @@ public class MemberController {
     @PostMapping("/memberInfo/{memberId}")
     public ResponseEntity addMemberInfo(@Valid @PathVariable("memberId") @Positive Long memberId,
                                         @Valid @RequestBody MemberDto.Post post) {
-        memberService.addInfo(memberId, post);
+        Member member = memberService.addInfo(memberId, post);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        // ResponseBody에 변경된 회원의 권한 제공
+        MemberDto.addInfoResponse addInfoResponse = new MemberDto.addInfoResponse(member.getMemberRole());
+
+        return new ResponseEntity<>(addInfoResponse, HttpStatus.CREATED);
     }
 
     // 회원 탈퇴
