@@ -1,6 +1,7 @@
 package com.OmObe.OmO.member.entity;
 
 import com.OmObe.OmO.Board.entity.Board;
+import com.OmObe.OmO.Comment.entity.Comment;
 import com.OmObe.OmO.Liked.entity.Liked;
 import com.OmObe.OmO.MyCourse.entity.MyCourseLike;
 import com.OmObe.OmO.MyCourse.entity.MyCourse;
@@ -134,6 +135,10 @@ public class Member {
     // Member - Review 일대다 매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    // Member - Comment 일대다 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public void addLikes(Liked liked){
         this.likedList.add(liked);
