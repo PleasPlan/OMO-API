@@ -1,5 +1,6 @@
 package com.OmObe.OmO.member.dto;
 
+import com.OmObe.OmO.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -89,5 +90,13 @@ public class MemberDto {
     @Setter
     public static class Response{
         private Long memberId;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class addInfoResponse{
+        private Member.MemberRole memberRole;
     }
 }
