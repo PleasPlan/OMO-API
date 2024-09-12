@@ -114,12 +114,12 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return UriComponentsBuilder
                 .newInstance()
                 // todo 프론트 엔드 테스트 완료 후 정식 uri로 리다이렉트 경로 수정
-//                .scheme("http")
-                .scheme("https")
-//                .host("localhost")
-                .host("www.oneulmohae.co.kr")
+                .scheme("http")
+//                .scheme("https")
+                .host("localhost")
+//                .host("www.oneulmohae.co.kr")
 //                .host("api.oneulmohae.co.kr")
-//                .port(5173)
+                .port(5173)
 //                .port(8080)
                 .path("/LoginLoading")
                 .queryParams(queryParams)
