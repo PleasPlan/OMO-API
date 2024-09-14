@@ -40,10 +40,10 @@ public class Board {
     @Column(nullable = false)
     private Integer viewCount = 0;  // 게시글 조회수\
 
-    @OneToMany(mappedBy = "board",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Liked> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
