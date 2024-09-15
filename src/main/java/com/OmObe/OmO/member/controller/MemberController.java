@@ -50,9 +50,10 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/member/{memberId}")
-    public ResponseEntity deleteMember(@Valid @PathVariable("memberId") @Positive Long memberId){
-        memberService.quitMember(memberId);
+    @DeleteMapping("/member")
+    public ResponseEntity deleteMember(@RequestHeader("Authorization") String token){
+        Member member = tokenDecryption.getWriterInJWTToken(token);
+        memberService.quitMember(member.getMemberId());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
