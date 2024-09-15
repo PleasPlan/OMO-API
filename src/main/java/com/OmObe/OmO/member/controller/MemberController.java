@@ -1,11 +1,13 @@
 package com.OmObe.OmO.member.controller;
 
+import com.OmObe.OmO.auth.jwt.TokenDecryption;
 import com.OmObe.OmO.member.dto.MemberDto;
 import com.OmObe.OmO.member.entity.Member;
 import com.OmObe.OmO.member.mapper.MemberMapper;
 import com.OmObe.OmO.member.repository.MemberRepository;
 import com.OmObe.OmO.member.service.MemberService;
 import com.OmObe.OmO.response.ResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,17 +20,12 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 public class MemberController {
     private final MemberMapper mapper;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-
-    @Autowired
-    public MemberController(MemberMapper mapper, MemberService memberService, MemberRepository memberRepository) {
-        this.mapper = mapper;
-        this.memberService = memberService;
-        this.memberRepository = memberRepository;
-    }
+    private final TokenDecryption tokenDecryption;
 
     // 회원 가입
 //    @PostMapping("/signup")
@@ -40,10 +37,11 @@ public class MemberController {
 //    }
 
     // 회원 추가 정보 입력
-    @PostMapping("/memberInfo/{memberId}")
-    public ResponseEntity addMemberInfo(@Valid @PathVariable("memberId") @Positive Long memberId,
+    @PostMapping("/memberInfo")
+    public ResponseEntity addMemberInfo(@RequestHeader("Authorization") String token,
                                         @Valid @RequestBody MemberDto.Post post) {
-        Member member = memberService.addInfo(memberId, post);
+        Member findMember = tokenDecryption.getWriterInJWTToken(token);
+        Member member = memberService.addInfo(findMember.getMemberId(), post);
 
         // ResponseBody에 변경된 회원의 권한 제공
         MemberDto.addInfoResponse addInfoResponse = new MemberDto.addInfoResponse(member.getMemberRole());
@@ -52,9 +50,10 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/member/{memberId}")
-    public ResponseEntity deleteMember(@Valid @PathVariable("memberId") @Positive Long memberId){
-        memberService.quitMember(memberId);
+    @DeleteMapping("/member")
+    public ResponseEntity deleteMember(@RequestHeader("Authorization") String token){
+        Member member = tokenDecryption.getWriterInJWTToken(token);
+        memberService.quitMember(member.getMemberId());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

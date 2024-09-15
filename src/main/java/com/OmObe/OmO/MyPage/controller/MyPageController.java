@@ -125,11 +125,11 @@ public class MyPageController {
     }
 
     // 프로필 이미지 수정
-    @PatchMapping("/profileImage/{memberId}")
-    public ResponseEntity patchProfileImage(@Valid @PathVariable("memberId") Long memberId,
-                                            @RequestHeader("Authorization") String token,
+    @PatchMapping("/profileImage")
+    public ResponseEntity patchProfileImage(@RequestHeader("Authorization") String token,
                                             @Nullable @RequestParam("image")MultipartFile file) {
-        Member member = myPageService.updateProfileImage(memberId, token, file);
+        Member findMember = tokenDecryption.getWriterInJWTToken(token); // token으로 Member 추출
+        Member member = myPageService.updateProfileImage(findMember.getMemberId(), token, file);
 
         // 수정한 프로필 이미지의 파일명을 응답으로 제공
         MyPageDto.profileImageResponse profileImageResponse = mapper.memberToProfileImageName(member);
@@ -137,30 +137,30 @@ public class MyPageController {
     }
 
     // 닉네임 수정
-    @PatchMapping("/nickname/{memberId}")
-    public ResponseEntity patchNickname(@Valid @PathVariable("memberId") Long memberId,
-                                        @RequestHeader("Authorization") String token,
+    @PatchMapping("/nickname")
+    public ResponseEntity patchNickname(@RequestHeader("Authorization") String token,
                                         @Valid @RequestBody MemberDto.NicknamePatch dto) {
-        myPageService.updateNickname(memberId, dto, token);
+        Member member = tokenDecryption.getWriterInJWTToken(token); // token으로 Member 추출
+        myPageService.updateNickname(member.getMemberId(), dto, token);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // MBTI 수정
-    @PatchMapping("/mbti/{memberId}")
-    public ResponseEntity patchMbti(@Valid @PathVariable("memberId") Long memberId,
-                                    @RequestHeader("Authorization") String token,
+    @PatchMapping("/mbti")
+    public ResponseEntity patchMbti(@RequestHeader("Authorization") String token,
                                     @Valid @RequestBody MemberDto.MbtiPatch dto) {
-        myPageService.updateMbti(memberId, dto, token);
+        Member member = tokenDecryption.getWriterInJWTToken(token); // token으로 Member 추출
+        myPageService.updateMbti(member.getMemberId(), dto, token);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 내 정보 조회
-    @GetMapping("/myInfo/{memberId}")
-    public ResponseEntity getMyInfo(@Valid @PathVariable("memberId") Long memberId,
-                                    @RequestHeader("Authorization") String token) {
-        MyPageDto.MyInfoResponse myInfo = myPageService.findMyInfo(memberId, token);
+    @GetMapping("/myInfo")
+    public ResponseEntity getMyInfo(@RequestHeader("Authorization") String token) {
+        Member member = tokenDecryption.getWriterInJWTToken(token);
+        MyPageDto.MyInfoResponse myInfo = myPageService.findMyInfo(member.getMemberId(), token); // token으로 Member 추출
 
         return new ResponseEntity<>(myInfo, HttpStatus.OK);
     }
