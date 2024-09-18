@@ -73,6 +73,9 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.PATCH, "/notice/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/notice/**").hasRole("ADMIN")
 
+                        // 마이페이지 권한 설정
+                        .antMatchers(HttpMethod.PATCH, "/myPage/*").hasAnyRole("ADMIN", "USER") // 프로필 이미지, 닉네임, MBTI 수정 권한 설정
+
                         // 커뮤니티 권한 설정
                         .antMatchers(HttpMethod.POST, "/board/*").hasAnyRole("ADMIN", "USER") // 게시글 작성 권한 설정
                         .antMatchers(HttpMethod.PATCH, "/board/modification/*").hasAnyRole("ADMIN", "USER") // 게시글 수정 권한 설정
