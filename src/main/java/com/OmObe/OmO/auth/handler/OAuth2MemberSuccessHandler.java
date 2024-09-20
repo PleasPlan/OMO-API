@@ -108,8 +108,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         queryParams.add("accessToken", "Bearer " + accessToken);
         queryParams.add("refreshToken", refreshToken);
         queryParams.add("isExistingMember", checkMemberRole);
-        queryParams.add("memberId", memberId.toString());
-        queryParams.add("memberRole", role.toString());
+//        queryParams.add("memberId", memberId.toString());
+//        queryParams.add("memberRole", role.toString());
 
         return UriComponentsBuilder
                 .newInstance()
