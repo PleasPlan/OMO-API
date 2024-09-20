@@ -126,7 +126,7 @@ public class MyCourseMapper {
             Long courseId = course.getCourseId();
             String courseName = course.getCourseName();
             List<MyCourseDto.ResponseSmallDetailPlace> contents = new ArrayList<>();
-            getNextCoursesMoreDetail(contents,course,course.getMember());
+            getNextCoursesMoreDetail(contents,course,member);
             Collections.reverse(contents);
             LocalDateTime createdAt = course.getCreatedAt();
             LocalDateTime modifiedAt = course.getModifiedAt();
