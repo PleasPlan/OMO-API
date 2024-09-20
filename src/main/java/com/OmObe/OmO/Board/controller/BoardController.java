@@ -62,7 +62,7 @@ public class BoardController {
 //        board.setMember(writer);
 
         Board createdBoard = boardService.createBoard(board, token);
-        BoardDto.Response response = mapper.boardToBoardResponseDto(createdBoard);
+        BoardDto.Response response = mapper.boardToBoardResponseDto(createdBoard,token);
 
         // 게시판 글 작성 시 사용자의 프로필 이미지 설정
         response.setProfileURL(createdBoard.getMember().getProfileImageUrl());
@@ -81,7 +81,7 @@ public class BoardController {
         Board board = mapper.boardPatchDtoToBoard(patchDto);
         Board response = boardService.updateBoard(patchDto, token);
 
-        return new ResponseEntity<>(mapper.boardToBoardResponseDto(response),
+        return new ResponseEntity<>(mapper.boardToBoardResponseDto(response,token),
                 HttpStatus.OK);
     }
 
