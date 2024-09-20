@@ -43,10 +43,7 @@ public class MemberController {
         Member findMember = tokenDecryption.getWriterInJWTToken(token);
         Member member = memberService.addInfo(findMember.getMemberId(), post);
 
-        // ResponseBody에 변경된 회원의 권한 제공
-        MemberDto.addInfoResponse addInfoResponse = new MemberDto.addInfoResponse(member.getMemberRole());
-
-        return new ResponseEntity<>(addInfoResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // 회원 탈퇴
